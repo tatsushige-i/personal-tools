@@ -7,6 +7,16 @@ on:
     branches: [main]
 
 jobs:
+  eol-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: sindrel/endoflife-github-action@v1
+        with:
+          product: nodejs
+          version: 20
+          fail_on_eol: 'true'
+
   ci:
     runs-on: ubuntu-latest
 
