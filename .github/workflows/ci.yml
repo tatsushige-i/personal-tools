@@ -24,7 +24,7 @@ jobs:
             exit 1
           fi
 
-  ci:
+  build:
     runs-on: ubuntu-latest
 
     steps:
