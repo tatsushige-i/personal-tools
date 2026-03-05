@@ -11,10 +11,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: endoflife-date/action@v1
+      - uses: sindrel/endoflife-github-action@v1
         with:
           product: node
           version: 20
+          fail_on_eol: 'true'
 
   ci:
     runs-on: ubuntu-latest
