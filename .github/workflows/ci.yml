@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: sindrel/endoflife-github-action@v1
         with:
-          product: node
+          product: nodejs
           version: 20
           fail_on_eol: 'true'
 
