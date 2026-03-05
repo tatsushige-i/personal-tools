@@ -6,16 +6,23 @@ on:
   pull_request:
     branches: [main]
 
+env:
+  NODE_VERSION: 20
+
 jobs:
   eol-check:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: sindrel/endoflife-github-action@v1
-        with:
-          product: nodejs
-          version: 20
-          fail_on_eol: 'true'
+      - name: Check Node.js EOL
+        run: |
+          eol=$(curl -sf https://endoflife.date/api/nodejs/$NODE_VERSION.json | jq -r '.eol')
+          today=$(date +%Y-%m-%d)
+          echo "Node.js $NODE_VERSION EOL: $eol / Today: $today"
+          if [[ "$today" > "$eol" ]]; then
+            echo "::error::Node.js $NODE_VERSION has reached EOL ($eol)"
+            exit 1
+          fi
 
   ci:
     runs-on: ubuntu-latest
@@ -25,7 +32,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ env.NODE_VERSION }}
           cache: npm
 
       - run: npm ci
