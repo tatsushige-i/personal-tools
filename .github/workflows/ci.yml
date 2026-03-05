@@ -7,6 +7,15 @@ on:
     branches: [main]
 
 jobs:
+  eol-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: endoflife-date/action@v1
+        with:
+          product: node
+          version: 20
+
   ci:
     runs-on: ubuntu-latest
 
