@@ -89,6 +89,10 @@ export function generateIds(type: IdType, count: number): string[] {
       return generateUUIDv7(count);
     case "ulid":
       return generateULID(count);
+    default: {
+      const _exhaustive: never = type;
+      throw new Error(`Unsupported IdType: ${String(_exhaustive)}`);
+    }
   }
 }
 
