@@ -19,7 +19,7 @@ const tools: Tool[] = [
 
 export default function Home() {
   return (
-    <div className="mx-auto max-w-4xl px-6 py-16">
+    <div>
       <h1 className="text-3xl font-bold tracking-tight">Personal Tools</h1>
       <p className="mt-2 text-muted-foreground">
         A collection of utility tools.
