@@ -42,14 +42,15 @@ describe("ThemeToggle", () => {
 
     await user.click(screen.getByRole("button", { name: "Toggle theme" }));
     await user.click(screen.getByRole("menuitem", { name: "Light" }));
-    expect(mockSetTheme).toHaveBeenCalledWith("light");
+    expect(mockSetTheme).toHaveBeenNthCalledWith(1, "light");
 
     await user.click(screen.getByRole("button", { name: "Toggle theme" }));
     await user.click(screen.getByRole("menuitem", { name: "Dark" }));
-    expect(mockSetTheme).toHaveBeenCalledWith("dark");
+    expect(mockSetTheme).toHaveBeenNthCalledWith(2, "dark");
 
     await user.click(screen.getByRole("button", { name: "Toggle theme" }));
     await user.click(screen.getByRole("menuitem", { name: "System" }));
-    expect(mockSetTheme).toHaveBeenCalledWith("system");
+    expect(mockSetTheme).toHaveBeenNthCalledWith(3, "system");
+    expect(mockSetTheme).toHaveBeenCalledTimes(3);
   });
 });
