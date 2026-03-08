@@ -29,7 +29,7 @@ export default function Home() {
 
       {tools.length === 0 ? (
         <div className="mt-16 flex flex-col items-center gap-3 text-center">
-          <Package className="h-12 w-12 text-muted-foreground/50" />
+          <Package className="h-12 w-12 text-muted-foreground/50" aria-hidden="true" />
           <p className="text-muted-foreground">
             No tools yet. Add your first tool to get started.
           </p>
@@ -43,12 +43,12 @@ export default function Home() {
                 <Card className="group transition-colors hover:bg-muted/50">
                   <CardHeader className="flex flex-row items-center gap-4">
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                      <Icon className="h-5 w-5" />
+                      <Icon className="h-5 w-5" aria-hidden="true" />
                     </div>
                     <div className="flex-1 space-y-1">
                       <CardTitle className="flex items-center justify-between">
                         {tool.name}
-                        <ArrowRight className="h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100 text-muted-foreground" />
+                        <ArrowRight className="h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100 text-muted-foreground" aria-hidden="true" />
                       </CardTitle>
                       <CardDescription>{tool.description}</CardDescription>
                     </div>

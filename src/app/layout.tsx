@@ -43,7 +43,7 @@ export default function RootLayout({
                 href="/"
                 className="flex items-center gap-2 text-lg font-semibold tracking-tight"
               >
-                <Home className="h-5 w-5" />
+                <Home className="h-5 w-5" aria-hidden="true" />
                 Personal Tools
               </Link>
               <ThemeToggle />
