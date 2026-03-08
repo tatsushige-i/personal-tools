@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Package, type LucideIcon } from "lucide-react";
+import { ArrowRight, Fingerprint, Package, type LucideIcon } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -15,8 +15,12 @@ type Tool = {
 };
 
 const tools: Tool[] = [
-  // Add tools here:
-  // { name: "Example Tool", description: "Description", href: "/tools/example", icon: Wrench },
+  {
+    name: "UUID Generator",
+    description: "UUID v4/v7・ULID生成、一括生成＆コピー",
+    href: "/tools/uuid-generator",
+    icon: Fingerprint,
+  },
 ];
 
 export default function Home() {

@@ -6,7 +6,9 @@ A collection of personal utility tools built with Next.js.
 
 ## Tools
 
-No tools yet. New tools will be listed here as they are added.
+| Tool | Description | Path |
+|------|-------------|------|
+| UUID Generator | Generate UUID v4/v7 and ULID with bulk generation and clipboard copy | `/tools/uuid-generator` |
 
 ## Tech Stack
 
