@@ -16,16 +16,18 @@ export function UuidGeneratorPage() {
   const handleGenerate = useCallback(() => {
     const values = generateIds(idType, count);
     setGeneratedValues(values);
-    setHistory((prev) => [
-      {
-        id: crypto.randomUUID(),
-        type: idType,
-        values,
-        count,
-        timestamp: new Date(),
-      },
-      ...prev,
-    ]);
+    setHistory((prev) =>
+      [
+        {
+          id: crypto.randomUUID(),
+          type: idType,
+          values,
+          count,
+          timestamp: new Date(),
+        },
+        ...prev,
+      ].slice(0, 50)
+    );
   }, [idType, count]);
 
   return (

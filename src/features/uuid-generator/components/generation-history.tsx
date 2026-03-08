@@ -2,13 +2,13 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import type { GenerationRecord } from "../lib/types";
+import type { IdType, GenerationRecord } from "../lib/types";
 
 type GenerationHistoryProps = {
   history: GenerationRecord[];
 };
 
-const TYPE_LABELS: Record<string, string> = {
+const TYPE_LABELS: Record<IdType, string> = {
   uuidv4: "UUID v4",
   uuidv7: "UUID v7",
   ulid: "ULID",
