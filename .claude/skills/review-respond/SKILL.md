@@ -168,6 +168,8 @@ gh api repos/{owner}/{repo}/pulls/<PR番号>/comments \
 
 返信は日本語で記述する（レビュアーが日本語の場合）。レビューコメントが英語の場合は英語で返信する。
 
+**署名**: `.claude/rules/conventions.md` の「GitHubコメントの署名」ルールに従い、各返信の末尾に署名を付与する。
+
 ### Step 10: 完了サマリー
 
 対応結果を以下の形式で表示する:
