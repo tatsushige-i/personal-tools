@@ -18,6 +18,8 @@
 - `npm run dev` — 開発サーバー起動（Turbopack）
 - `npm run build` — プロダクションビルド
 - `npm run lint` — ESLint実行
+- `npm run test` — テスト実行
+- `npm run test:watch` — テストをwatchモードで実行
 - `npx shadcn@latest add <component>` — shadcn/uiコンポーネント追加
 
 ## アーキテクチャ
