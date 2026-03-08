@@ -12,7 +12,9 @@
 
 - `src/components/ui/` — shadcn/ui管理の共有UIコンポーネント。生成ファイルは手動編集しない。`npx shadcn@latest add <component>` で追加する。
 - `src/components/`（ui以外） — プロジェクト全体の共有コンポーネント（ナビゲーション、レイアウト部品など）。
+- `src/components/__tests__/` — 共有コンポーネントのテスト。
 - `src/features/<tool>/` — 各ツール固有のコード。feature間のインポートは禁止。共有する場合は `src/lib/` または `src/components/` に抽出する。
+- `src/features/<tool>/lib/__tests__/` — ロジック層のテスト。
 - `src/lib/` — 複数featureで使う共有ユーティリティ・ヘルパー。
 
 ## ルール
