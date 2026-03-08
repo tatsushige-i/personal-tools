@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
+import { Home } from "lucide-react";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ThemeToggle } from "@/components/theme-toggle";
 import "./globals.css";
@@ -38,7 +39,11 @@ export default function RootLayout({
         >
           <header className="sticky top-0 z-50 h-14 border-b border-border/40 bg-background/80 backdrop-blur-lg supports-[backdrop-filter]:bg-background/60">
             <div className="mx-auto flex h-full max-w-5xl items-center justify-between px-6">
-              <Link href="/" className="text-lg font-semibold tracking-tight">
+              <Link
+                href="/"
+                className="flex items-center gap-2 text-lg font-semibold tracking-tight"
+              >
+                <Home className="h-5 w-5" />
                 Personal Tools
               </Link>
               <ThemeToggle />
