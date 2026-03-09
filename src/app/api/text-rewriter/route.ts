@@ -24,6 +24,13 @@ export async function POST(request: Request) {
     );
   }
 
+  if (typeof body !== "object" || body === null) {
+    return NextResponse.json(
+      { error: "リクエストの形式が不正です。" },
+      { status: 400 }
+    );
+  }
+
   const { text, mode } = body as Record<string, unknown>;
 
   if (typeof text !== "string" || typeof mode !== "string") {
