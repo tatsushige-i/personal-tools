@@ -1,4 +1,4 @@
-import { buildPrompt, validateInput } from "../rewriter";
+import { buildPrompt, validateInput, MAX_LENGTH } from "../rewriter";
 import type { RewriteMode } from "../types";
 
 describe("buildPrompt", () => {
@@ -74,19 +74,19 @@ describe("validateInput", () => {
     expect(result.valid).toBe(false);
   });
 
-  it("returns valid for text at exactly 5000 characters", () => {
-    const text = "a".repeat(5000);
+  it("returns valid for text at exactly MAX_LENGTH characters", () => {
+    const text = "a".repeat(MAX_LENGTH);
     const result = validateInput(text);
     expect(result).toEqual({ valid: true });
   });
 
-  it("returns error for text exceeding 5000 characters", () => {
-    const text = "a".repeat(5001);
+  it("returns error for text exceeding MAX_LENGTH characters", () => {
+    const text = "a".repeat(MAX_LENGTH + 1);
     const result = validateInput(text);
     expect(result.valid).toBe(false);
     if (!result.valid) {
-      expect(result.error).toContain("5000");
-      expect(result.error).toContain("5001");
+      expect(result.error).toContain(String(MAX_LENGTH));
+      expect(result.error).toContain(String(MAX_LENGTH + 1));
     }
   });
 });

@@ -1,16 +1,9 @@
 import { NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { buildPrompt, validateInput } from "@/features/text-rewriter/lib/rewriter";
+import { buildPrompt, validateInput, REWRITE_MODE_OPTIONS } from "@/features/text-rewriter/lib/rewriter";
 import type { RewriteMode } from "@/features/text-rewriter/lib/types";
 
-const VALID_MODES: RewriteMode[] = [
-  "casual-to-business",
-  "business-to-casual",
-  "ja-to-en",
-  "en-to-ja",
-  "summarize",
-  "proofread",
-];
+const VALID_MODES: RewriteMode[] = REWRITE_MODE_OPTIONS.map((opt) => opt.value);
 
 export async function POST(request: Request) {
   const apiKey = process.env.GEMINI_API_KEY;
