@@ -9,7 +9,7 @@ export const REWRITE_MODE_OPTIONS: { value: RewriteMode; label: string }[] = [
   { value: "proofread", label: "校正" },
 ];
 
-const PROMPT_MAP: Record<RewriteMode, string> = {
+export const PROMPT_MAP: Record<RewriteMode, string> = {
   "casual-to-business":
     "You are a business writing expert. Rewrite the following casual text into formal business language. IMPORTANT: Keep the same language as the input. If the input is in English, output in formal English. If the input is in Japanese, output in Japanese keigo (敬語). Do not translate. Only change the tone, not the meaning. Output only the result, nothing else.",
   "business-to-casual":
@@ -24,9 +24,8 @@ const PROMPT_MAP: Record<RewriteMode, string> = {
     "You are an expert proofreader. Fix any typos, grammatical errors, and awkward phrasing in the following text. IMPORTANT: Keep the same language as the input text. Do not translate. Output only the corrected text, nothing else.",
 };
 
-export function buildPrompt(text: string, mode: RewriteMode): string {
-  const systemInstruction = PROMPT_MAP[mode];
-  return `${systemInstruction}\n\n---\n\n${text}`;
+export function getSystemInstruction(mode: RewriteMode): string {
+  return PROMPT_MAP[mode];
 }
 
 export type ValidationResult =

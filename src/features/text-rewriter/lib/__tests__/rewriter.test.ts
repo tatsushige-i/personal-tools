@@ -1,7 +1,7 @@
-import { buildPrompt, validateInput, MAX_LENGTH } from "../rewriter";
+import { getSystemInstruction, validateInput, MAX_LENGTH } from "../rewriter";
 import type { RewriteMode } from "../types";
 
-describe("buildPrompt", () => {
+describe("getSystemInstruction", () => {
   const modes: RewriteMode[] = [
     "casual-to-business",
     "business-to-casual",
@@ -11,47 +11,40 @@ describe("buildPrompt", () => {
     "proofread",
   ];
 
-  it.each(modes)("builds a prompt for mode: %s", (mode) => {
-    const result = buildPrompt("テストテキスト", mode);
-    expect(result).toContain("テストテキスト");
-    expect(result).toContain("---");
+  it.each(modes)("returns a system instruction for mode: %s", (mode) => {
+    const result = getSystemInstruction(mode);
+    expect(result).toBeTruthy();
+    expect(typeof result).toBe("string");
   });
 
-  it("includes system instruction for casual-to-business", () => {
-    const result = buildPrompt("hello", "casual-to-business");
+  it("returns instruction containing 'formal business' for casual-to-business", () => {
+    const result = getSystemInstruction("casual-to-business");
     expect(result).toContain("formal business");
   });
 
-  it("includes system instruction for business-to-casual", () => {
-    const result = buildPrompt("hello", "business-to-casual");
+  it("returns instruction containing 'casual' for business-to-casual", () => {
+    const result = getSystemInstruction("business-to-casual");
     expect(result).toContain("casual");
   });
 
-  it("includes system instruction for ja-to-en", () => {
-    const result = buildPrompt("hello", "ja-to-en");
+  it("returns instruction containing 'English' for ja-to-en", () => {
+    const result = getSystemInstruction("ja-to-en");
     expect(result).toContain("English");
   });
 
-  it("includes system instruction for en-to-ja", () => {
-    const result = buildPrompt("hello", "en-to-ja");
+  it("returns instruction containing '日本語' for en-to-ja", () => {
+    const result = getSystemInstruction("en-to-ja");
     expect(result).toContain("日本語");
   });
 
-  it("includes system instruction for summarize", () => {
-    const result = buildPrompt("hello", "summarize");
+  it("returns instruction containing 'summarize' for summarize", () => {
+    const result = getSystemInstruction("summarize");
     expect(result).toContain("summarize");
   });
 
-  it("includes system instruction for proofread", () => {
-    const result = buildPrompt("hello", "proofread");
+  it("returns instruction containing 'proofreader' for proofread", () => {
+    const result = getSystemInstruction("proofread");
     expect(result).toContain("proofreader");
-  });
-
-  it("separates system instruction and user text with delimiter", () => {
-    const result = buildPrompt("user input", "summarize");
-    const parts = result.split("---");
-    expect(parts).toHaveLength(2);
-    expect(parts[1]).toContain("user input");
   });
 });
 

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { buildPrompt, validateInput, REWRITE_MODE_OPTIONS } from "@/features/text-rewriter/lib/rewriter";
+import { getSystemInstruction, validateInput, REWRITE_MODE_OPTIONS } from "@/features/text-rewriter/lib/rewriter";
 import type { RewriteMode } from "@/features/text-rewriter/lib/types";
 
 const VALID_MODES: RewriteMode[] = REWRITE_MODE_OPTIONS.map((opt) => opt.value);
@@ -47,10 +47,13 @@ export async function POST(request: Request) {
 
   try {
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const systemInstruction = getSystemInstruction(mode as RewriteMode);
+    const model = genAI.getGenerativeModel({
+      model: "gemini-2.5-flash",
+      systemInstruction,
+    });
 
-    const prompt = buildPrompt(text, mode as RewriteMode);
-    const result = await model.generateContent(prompt);
+    const result = await model.generateContent(text);
     const responseText = result.response.text();
 
     return NextResponse.json({ result: responseText });
