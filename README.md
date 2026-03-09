@@ -21,6 +21,8 @@ A collection of personal utility tools built with Next.js.
 
 ```bash
 npm install
+cp .env.local.example .env.local
+# Edit .env.local and configure the required variables
 npm run dev
 ```
 
