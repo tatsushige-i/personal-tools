@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { REWRITE_MODE_OPTIONS } from "../lib/rewriter";
+import { MAX_LENGTH, REWRITE_MODE_OPTIONS } from "../lib/rewriter";
 import type { RewriteMode } from "../lib/types";
 
 type RewriterControlsProps = {
@@ -62,7 +62,7 @@ export function RewriterControls({
           className="resize-y"
         />
         <p className="text-xs text-muted-foreground">
-          {text.length} / 5,000文字
+          {text.length} / {MAX_LENGTH.toLocaleString()}文字
         </p>
       </div>
 

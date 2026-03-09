@@ -33,7 +33,7 @@ export type ValidationResult =
   | { valid: true }
   | { valid: false; error: string };
 
-const MAX_LENGTH = 5000;
+export const MAX_LENGTH = 5000;
 
 export function validateInput(text: string): ValidationResult {
   if (text.trim().length === 0) {

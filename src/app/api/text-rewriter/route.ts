@@ -31,11 +31,11 @@ export async function POST(request: Request) {
     );
   }
 
-  const { text, mode } = body as { text?: string; mode?: string };
+  const { text, mode } = body as Record<string, unknown>;
 
-  if (!text || !mode) {
+  if (typeof text !== "string" || typeof mode !== "string") {
     return NextResponse.json(
-      { error: "text と mode は必須です。" },
+      { error: "text と mode は文字列で指定してください。" },
       { status: 400 }
     );
   }
