@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Fingerprint, Package, type LucideIcon } from "lucide-react";
+import { ArrowRight, Fingerprint, Languages, Package, type LucideIcon } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -20,6 +20,12 @@ const tools: Tool[] = [
     description: "UUID v4/v7・ULID生成、一括生成＆コピー",
     href: "/tools/uuid-generator",
     icon: Fingerprint,
+  },
+  {
+    name: "Text Rewriter",
+    description: "テキストのトーン変換・翻訳・要約・校正",
+    href: "/tools/text-rewriter",
+    icon: Languages,
   },
 ];
 
