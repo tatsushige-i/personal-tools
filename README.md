@@ -9,6 +9,7 @@ A collection of personal utility tools built with Next.js.
 | Tool | Description | Path |
 |------|-------------|------|
 | UUID Generator | Generate UUID v4/v7 and ULID with bulk generation and clipboard copy | `/tools/uuid-generator` |
+| Text Rewriter | Rewrite text with tone conversion, translation, summarization, and proofreading (powered by Gemini) | `/tools/text-rewriter` |
 
 ## Tech Stack
 
