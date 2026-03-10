@@ -14,11 +14,31 @@ export function parsePath(path: string): PathSegment[] {
 
   while (i < trimmed.length) {
     if (trimmed[i] === "[") {
-      const end = trimmed.indexOf("]", i);
-      if (end === -1) throw new Error("Unclosed bracket in path");
-      const content = trimmed.slice(i + 1, end);
+      const start = i + 1;
+      let end: number;
 
-      // ["key"] — quoted string key
+      // Find matching ']', respecting quoted strings
+      const quote = trimmed[start];
+      if (quote === '"' || quote === "'") {
+        // Scan past the closing quote, then expect ']'
+        let j = start + 1;
+        while (j < trimmed.length && trimmed[j] !== quote) {
+          j++;
+        }
+        if (j >= trimmed.length) throw new Error("Unclosed quote in bracket");
+        // j is at closing quote, next char should be ']'
+        if (j + 1 >= trimmed.length || trimmed[j + 1] !== "]") {
+          throw new Error("Expected ']' after closing quote");
+        }
+        end = j + 1; // position of ']'
+      } else {
+        end = trimmed.indexOf("]", start);
+        if (end === -1) throw new Error("Unclosed bracket in path");
+      }
+
+      const content = trimmed.slice(start, end);
+
+      // ["key"] or ['key'] — quoted string key
       if (
         (content.startsWith('"') && content.endsWith('"')) ||
         (content.startsWith("'") && content.endsWith("'"))

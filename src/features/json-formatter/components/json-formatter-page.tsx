@@ -36,9 +36,9 @@ export function JsonFormatterPage() {
   }, [parseResult, pathFilter]);
 
   const outputText = useMemo(() => {
-    if (!filteredResult?.success) return "";
+    if (viewMode !== "formatted" || !filteredResult?.success) return "";
     return JSON.stringify(filteredResult.data, null, indentSize);
-  }, [filteredResult, indentSize]);
+  }, [filteredResult, indentSize, viewMode]);
 
   const handleFormat = () => {
     try {

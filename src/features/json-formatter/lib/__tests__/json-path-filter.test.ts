@@ -70,6 +70,16 @@ describe("parsePath", () => {
   it("rejects scientific notation as array index", () => {
     expect(() => parsePath("[1e2]")).toThrow("Invalid bracket content");
   });
+
+  it("parses key containing closing bracket", () => {
+    expect(parsePath('.["a]b"]')).toEqual([
+      { type: "property", key: "a]b" },
+    ]);
+  });
+
+  it("throws on unclosed quote in bracket", () => {
+    expect(() => parsePath('.["abc]')).toThrow("Unclosed quote");
+  });
 });
 
 describe("applyPathFilter", () => {
@@ -139,5 +149,10 @@ describe("applyPathFilter", () => {
     expect(() => applyPathFilter(d, ".toString")).toThrow(
       'Property "toString" not found'
     );
+  });
+
+  it("accesses key containing closing bracket", () => {
+    const d = { "a]b": 99 };
+    expect(applyPathFilter(d, '.["a]b"]')).toBe(99);
   });
 });
