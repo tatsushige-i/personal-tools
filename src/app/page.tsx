@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Fingerprint, Languages, Package, type LucideIcon } from "lucide-react";
+import { ArrowRight, Braces, Fingerprint, Languages, Package, type LucideIcon } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -26,6 +26,12 @@ const tools: Tool[] = [
     description: "テキストのトーン変換・翻訳・要約・校正",
     href: "/tools/text-rewriter",
     icon: Languages,
+  },
+  {
+    name: "JSON Formatter",
+    description: "JSONの整形・検証",
+    href: "/tools/json-formatter",
+    icon: Braces,
   },
 ];
 
