@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { getSystemInstruction, validateInput, REWRITE_MODE_OPTIONS } from "@/features/text-rewriter/lib/rewriter";
+import { getSystemInstruction, REWRITE_MODE_OPTIONS } from "@/features/text-rewriter/lib/rewriter";
 import type { RewriteMode } from "@/features/text-rewriter/lib/types";
+import { sanitizeInput, buildSystemPrompt, validateOutput } from "@/lib/ai";
 
 const VALID_MODES: RewriteMode[] = REWRITE_MODE_OPTIONS.map((opt) => opt.value);
 
@@ -47,14 +48,15 @@ export async function POST(request: Request) {
     );
   }
 
-  const validation = validateInput(text);
+  const validation = sanitizeInput(text);
   if (!validation.valid) {
     return NextResponse.json({ error: validation.error }, { status: 400 });
   }
 
   try {
     const genAI = new GoogleGenerativeAI(apiKey);
-    const systemInstruction = getSystemInstruction(mode as RewriteMode);
+    const rawInstruction = getSystemInstruction(mode as RewriteMode);
+    const systemInstruction = buildSystemPrompt({ systemPrompt: rawInstruction });
     const model = genAI.getGenerativeModel({
       model: "gemini-2.5-flash",
       systemInstruction,
@@ -62,6 +64,13 @@ export async function POST(request: Request) {
 
     const result = await model.generateContent(text);
     const responseText = result.response.text();
+
+    const outputCheck = validateOutput(responseText, {
+      systemPromptFragments: [rawInstruction, systemInstruction],
+    });
+    if (!outputCheck.valid) {
+      return NextResponse.json({ error: outputCheck.error }, { status: 500 });
+    }
 
     return NextResponse.json({ result: responseText });
   } catch (error) {
