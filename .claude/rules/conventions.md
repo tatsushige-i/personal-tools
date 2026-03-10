@@ -40,12 +40,13 @@ PRは小さく保つ。以下を目安とする：
 
 Issueのラベルに応じたプレフィックスを使用する：
 
-| ラベル          | プレフィックス | 例                          |
-| --------------- | -------------- | --------------------------- |
-| `bug`           | `bugfix/`      | `bugfix/login-error`        |
-| `enhancement`   | `feature/`     | `feature/add-dark-mode`     |
-| `documentation` | `docs/`        | `docs/update-readme`        |
-| `chore`         | `chore/`       | `chore/ci-setup`            |
+| ラベル          | プレフィックス |
+| --------------- | -------------- |
+| `bug`           | `bugfix/`      |
+| `feature`       | `feature/`     |
+| `enhancement`   | `enhance/`     |
+| `documentation` | `docs/`        |
+| `chore`         | `chore/`       |
 
 ブランチ名は `<プレフィックス><簡潔な英語の説明>` とし、単語はハイフン区切りにする。
 
@@ -58,7 +59,8 @@ Issue作成時に **種類ラベル** と **優先度ラベル** の両方を必
 | ラベル          | 判断基準                                                       |
 | --------------- | -------------------------------------------------------------- |
 | `bug`           | 既存機能が期待どおりに動作しない不具合の修正                   |
-| `enhancement`   | 既存機能の改善、または新機能の追加                             |
+| `feature`       | ユーザー向けの新しいツールの追加（例: JSON Formatter、UUID Generator） |
+| `enhancement`   | 既存機能の改善・拡張・UX向上・開発ワークフロー改善（スキル追加等） |
 | `documentation` | ドキュメント（README、CLAUDE.md、ルールファイル等）のみの変更  |
 | `chore`         | CI/CD、依存関係更新、リファクタリングなど機能に影響しない作業  |
 
