@@ -62,6 +62,14 @@ describe("parsePath", () => {
       { type: "property", key: "node_modules/@types/node" },
     ]);
   });
+
+  it("rejects float as array index", () => {
+    expect(() => parsePath("[1.5]")).toThrow("Invalid bracket content");
+  });
+
+  it("rejects scientific notation as array index", () => {
+    expect(() => parsePath("[1e2]")).toThrow("Invalid bracket content");
+  });
 });
 
 describe("applyPathFilter", () => {
@@ -124,5 +132,12 @@ describe("applyPathFilter", () => {
   it("accesses key with special characters via bracket notation", () => {
     const d = { "a.b": { "c/d": 42 } };
     expect(applyPathFilter(d, '.["a.b"]["c/d"]')).toBe(42);
+  });
+
+  it("does not match prototype properties like toString", () => {
+    const d = { a: 1 };
+    expect(() => applyPathFilter(d, ".toString")).toThrow(
+      'Property "toString" not found'
+    );
   });
 });

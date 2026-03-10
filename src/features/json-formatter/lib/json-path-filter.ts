@@ -26,9 +26,9 @@ export function parsePath(path: string): PathSegment[] {
         const key = content.slice(1, -1);
         segments.push({ type: "property", key });
       } else {
-        // [0] — numeric index
-        const index = parseInt(content, 10);
-        if (isNaN(index)) throw new Error(`Invalid bracket content: ${content}`);
+        // [0] — numeric index (strict non-negative integer only)
+        if (!/^\d+$/.test(content)) throw new Error(`Invalid bracket content: ${content}`);
+        const index = Number(content);
         segments.push({ type: "index", index });
       }
       i = end + 1;
@@ -70,7 +70,7 @@ export function applyPathFilter(data: unknown, path: string): unknown {
         );
       }
       const obj = current as Record<string, unknown>;
-      if (!(segment.key in obj)) {
+      if (!Object.hasOwn(obj, segment.key)) {
         throw new Error(`Property "${segment.key}" not found`);
       }
       current = obj[segment.key];

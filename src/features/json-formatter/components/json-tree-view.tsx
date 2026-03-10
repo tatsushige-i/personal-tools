@@ -36,11 +36,12 @@ function TreeNode({ label, value, depth, defaultExpanded }: TreeNodeProps) {
           style={{ paddingLeft: depth * 16 }}
           onClick={() => setExpanded(!expanded)}
           type="button"
+          aria-expanded={expanded}
         >
           {expanded ? (
-            <ChevronDown className="size-3 shrink-0 text-muted-foreground" />
+            <ChevronDown className="size-3 shrink-0 text-muted-foreground" aria-hidden="true" />
           ) : (
-            <ChevronRight className="size-3 shrink-0 text-muted-foreground" />
+            <ChevronRight className="size-3 shrink-0 text-muted-foreground" aria-hidden="true" />
           )}
           <span className="text-muted-foreground">{label}:</span>
           {!expanded && (
