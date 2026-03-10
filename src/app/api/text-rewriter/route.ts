@@ -66,7 +66,7 @@ export async function POST(request: Request) {
     const responseText = result.response.text();
 
     const outputCheck = validateOutput(responseText, {
-      systemPromptFragments: [rawInstruction],
+      systemPromptFragments: [rawInstruction, systemInstruction],
     });
     if (!outputCheck.valid) {
       return NextResponse.json({ error: outputCheck.error }, { status: 500 });
