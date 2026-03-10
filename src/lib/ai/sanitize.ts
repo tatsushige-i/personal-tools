@@ -30,9 +30,9 @@ const DELIMITER_INJECTION_PATTERNS: RegExp[] = [
   // ロールマーカー
   /\[INST\]/i,
   /\[\/INST\]/i,
-  /###\s*system/i,
-  /###\s*user/i,
-  /###\s*assistant/i,
+  /^\s*###\s*system\s*$/im,
+  /^\s*###\s*user\s*$/im,
+  /^\s*###\s*assistant\s*$/im,
 ];
 
 // 多言語パターン（指示無視系・プロンプト抽出系）
@@ -49,8 +49,6 @@ const MULTILINGUAL_PATTERNS: RegExp[] = [
   /显示系统提示/,
   /输出系统提示/,
   // 中国語（繁体字）
-  /忽略之前的指[令示]/,
-  /忽略所有指[令示]/,
   /忘記你的指[令示]/,
   /顯示系統提示/,
   /輸出系統提示/,
