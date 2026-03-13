@@ -13,10 +13,10 @@ description: Create a GitHub PR from the current branch - analyze changes, check
 
 1. `git branch --show-current` で現在のブランチを取得する
    - `main` の場合 → 「エラー: mainブランチ上ではPRを作成できません。作業ブランチに切り替えてください。」と表示して終了
-2. `git status --porcelain` で未コミット変更を確認する
-   - 変更がある場合 → 変更内容を分析し、適切なコミットメッセージを生成して自動コミットする（`git add` + `git commit`）
-3. `gh pr list --head <ブランチ名> --json number,url,state` で既存PRを確認する
+2. `gh pr list --head <ブランチ名> --json number,url,state` で既存PRを確認する
    - `OPEN` 状態のPRが存在する場合 → 「エラー: このブランチには既にオープンなPRがあります: <URL>」と表示して終了
+3. `git status --porcelain` で未コミット変更を確認する
+   - 変更がある場合 → 変更内容を分析し、関連ファイルを個別に `git add <ファイルパス>` でステージし、適切なコミットメッセージを生成して `git commit` する（`git add -A` や `git add .` は使わない。未追跡ファイルは変更内容との関連性を判断し、無関係なものは除外する）
 4. `git log main..HEAD --oneline` でコミットの存在を確認する
    - コミットがない場合 → 「エラー: mainブランチからのコミットがありません。」と表示して終了
 5. リモートにブランチをプッシュする:
@@ -31,8 +31,8 @@ description: Create a GitHub PR from the current branch - analyze changes, check
 2. ブランチ名から探索する — ブランチ名に含まれる番号やキーワードで `gh issue list --search "<キーワード>" --json number,title,state` を使いIssueを検索する
 3. `gh issue list --state open --limit 10 --json number,title,labels` で最近のオープンIssue一覧を取得し、ブランチ名・変更内容との関連性からIssueを推定する
 4. 結果に応じて分岐:
-   - **特定できた場合**: `gh issue view <番号> --json number,title,state` で検証し、タイトルを表示する
-   - **複数候補がある場合**: 最も関連性が高いものを自動選択する
+   - **特定できた場合**: `gh issue view <番号> --json number,title,state` で検証し、タイトルを表示する。検証失敗（Issueが存在しない・クローズ済み）の場合はIssue無しとして続行する
+   - **複数候補がある場合**: 以下の優先順位で自動選択する — (1) Issue番号がコミットメッセージに直接含まれるもの (2) ブランチ名のキーワードとタイトルが一致するもの (3) 最も新しいIssue
    - **特定できなかった場合**: Issue無しとして続行する（質問しない）
 
 ### Step 3: PR規模チェック
@@ -40,8 +40,8 @@ description: Create a GitHub PR from the current branch - analyze changes, check
 1. `git diff --numstat main...HEAD` で変更ファイル数・追加行数・削除行数を計測する
 2. `src/components/ui/` 配下のファイル（shadcn/ui自動生成）は行数カウントから除外する
 3. `.claude/rules/conventions.md` の上限（10ファイル/300行）と比較する:
-   - 超過している場合 → 警告を表示して続行する（確認は求めない）
-   - 新規ファイル・ディレクトリの作成が中心の場合はその旨を注記する（conventions.mdの例外規定）
+   - 超過している場合 → 警告とともにタスク分割の提案を表示して続行する（確認は求めない）
+   - 新規ファイル・ディレクトリの作成が中心の場合はその旨を注記し、例外規定に該当する旨を明示する（conventions.mdの例外規定）
 
 ### Step 4: 差分分析
 
