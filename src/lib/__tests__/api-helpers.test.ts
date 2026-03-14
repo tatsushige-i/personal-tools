@@ -25,6 +25,20 @@ describe("getClientIp", () => {
     expect(getClientIp(request)).toBe("198.51.100.1");
   });
 
+  it("x-forwarded-forが空文字の場合にx-real-ipにフォールバックする", () => {
+    const request = new Request("http://localhost", {
+      headers: { "x-forwarded-for": " , ", "x-real-ip": "198.51.100.1" },
+    });
+    expect(getClientIp(request)).toBe("198.51.100.1");
+  });
+
+  it("x-forwarded-forが空文字でx-real-ipもない場合にunknownを返す", () => {
+    const request = new Request("http://localhost", {
+      headers: { "x-forwarded-for": "" },
+    });
+    expect(getClientIp(request)).toBe("unknown");
+  });
+
   it("ヘッダーなしで'unknown'を返す", () => {
     const request = new Request("http://localhost");
     expect(getClientIp(request)).toBe("unknown");
