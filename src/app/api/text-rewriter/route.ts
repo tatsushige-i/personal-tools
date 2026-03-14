@@ -12,9 +12,11 @@ const rateLimit = createRateLimit({ limit: 10, windowMs: 60_000 });
 
 export async function POST(request: Request) {
   const ip = getClientIp(request);
-  const result = rateLimit.check(ip);
-  if (!result.allowed) {
-    return rateLimitResponse(result.retryAfterMs);
+  if (ip !== "unknown") {
+    const result = rateLimit.check(ip);
+    if (!result.allowed) {
+      return rateLimitResponse(result.retryAfterMs);
+    }
   }
 
   const apiKey = process.env.GEMINI_API_KEY;

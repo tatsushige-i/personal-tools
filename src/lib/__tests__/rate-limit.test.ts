@@ -49,6 +49,21 @@ describe("createRateLimit", () => {
     expect(allowed).toEqual({ allowed: true, remaining: 0 });
   });
 
+  it("limitが0以下の場合に例外を投げる", () => {
+    expect(() => createRateLimit({ limit: 0, windowMs: 60_000 })).toThrow(
+      "limit and windowMs must be positive numbers"
+    );
+    expect(() => createRateLimit({ limit: -1, windowMs: 60_000 })).toThrow(
+      "limit and windowMs must be positive numbers"
+    );
+  });
+
+  it("windowMsが0以下の場合に例外を投げる", () => {
+    expect(() => createRateLimit({ limit: 10, windowMs: 0 })).toThrow(
+      "limit and windowMs must be positive numbers"
+    );
+  });
+
   it("異なるキー（IP）が独立して管理される", () => {
     const rateLimit = createRateLimit({ limit: 1, windowMs: 60_000 });
 

@@ -9,6 +9,10 @@ type RateLimitResult =
 
 export function createRateLimit(options: RateLimitOptions) {
   const { limit, windowMs } = options;
+
+  if (limit <= 0 || windowMs <= 0) {
+    throw new Error("limit and windowMs must be positive numbers");
+  }
   const requests = new Map<string, number[]>();
 
   // 期限切れエントリの自動クリーンアップ（60秒間隔）
