@@ -3,10 +3,22 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { getSystemInstruction, REWRITE_MODE_OPTIONS } from "@/features/text-rewriter/lib/rewriter";
 import type { RewriteMode } from "@/features/text-rewriter/lib/types";
 import { sanitizeInput, buildSystemPrompt, validateOutput } from "@/lib/ai";
+import { createRateLimit } from "@/lib/rate-limit";
+import { getClientIp, rateLimitResponse } from "@/lib/api-helpers";
 
 const VALID_MODES: RewriteMode[] = REWRITE_MODE_OPTIONS.map((opt) => opt.value);
 
+const rateLimit = createRateLimit({ limit: 10, windowMs: 60_000 });
+
 export async function POST(request: Request) {
+  const ip = getClientIp(request);
+  if (ip !== "unknown") {
+    const result = rateLimit.check(ip);
+    if (!result.allowed) {
+      return rateLimitResponse(result.retryAfterMs);
+    }
+  }
+
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     return NextResponse.json(
