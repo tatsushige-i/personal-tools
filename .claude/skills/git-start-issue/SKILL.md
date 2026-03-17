@@ -1,5 +1,5 @@
 ---
-name: implement-issue
+name: git-start-issue
 description: Start implementation workflow from a GitHub Issue - fetch, validate labels, create branch, and enter plan mode
 argument-hint: "<Issue number>"
 ---

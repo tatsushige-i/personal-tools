@@ -6,9 +6,9 @@ Custom skills that automate common development workflows in this project. Each s
 
 | Skill | Command | Description |
 |-------|---------|-------------|
-| `implement-issue` | `/implement-issue <Issue number>` | Start implementation workflow from a GitHub Issue — fetch issue, validate labels, create branch, and enter plan mode |
-| `create-pr` | `/create-pr` | Create a GitHub PR from the current branch — analyze changes, check size limits, and generate PR with proper formatting |
-| `review-respond` | `/review-respond <PR number>` | Respond to GitHub PR review comments — analyze, fix code, and reply to each comment |
+| `git-start-issue` | `/git-start-issue <Issue number>` | Start implementation workflow from a GitHub Issue — fetch issue, validate labels, create branch, and enter plan mode |
+| `git-create-pr` | `/git-create-pr` | Create a GitHub PR from the current branch — analyze changes, check size limits, and generate PR with proper formatting |
+| `git-respond-review` | `/git-respond-review <PR number>` | Respond to GitHub PR review comments — analyze, fix code, and reply to each comment |
 
 ## Adding a New Skill
 
