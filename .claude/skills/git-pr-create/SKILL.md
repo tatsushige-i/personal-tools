@@ -1,5 +1,5 @@
 ---
-name: git-create-pr
+name: git-pr-create
 description: Create a GitHub PR from the current branch - analyze changes, check size limits, and generate PR with proper formatting
 ---
 
