@@ -1,5 +1,5 @@
 ---
-name: review-respond
+name: git-respond-review
 description: Respond to GitHub PR review comments - analyze, fix code, and reply to each comment
 argument-hint: "<PR number>"
 ---
