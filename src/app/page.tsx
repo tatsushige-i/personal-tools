@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Braces, FileText, Fingerprint, Languages, Package, type LucideIcon } from "lucide-react";
+import { ArrowRight, Braces, Clock, FileText, Fingerprint, Languages, Package, type LucideIcon } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -45,6 +45,12 @@ const tools: Tool[] = [
     href: "/tools/base64-encoder-decoder",
     icon: Package,
   },
+  {
+    name: "Cron Expression Editor",
+    description: "Cron式の組み立て・検証、次回実行予定の表示",
+    href: "/tools/cron-expression-editor",
+    icon: Clock,
+  },
 ];
 
 export default function Home() {
@@ -67,8 +73,8 @@ export default function Home() {
           {tools.map((tool) => {
             const Icon = tool.icon;
             return (
-              <Link key={tool.href} href={tool.href}>
-                <Card className="group transition-colors hover:bg-muted/50">
+              <Link key={tool.href} href={tool.href} className="h-full">
+                <Card className="group h-full transition-colors hover:bg-muted/50">
                   <CardHeader className="flex flex-row items-center gap-4">
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
                       <Icon className="h-5 w-5" aria-hidden="true" />
