@@ -62,7 +62,7 @@ export function NextExecutions({ executions, timezone, onTimezoneChange }: NextE
           {executions.map((date, i) => (
             <li key={i} className="flex items-center gap-3">
               <span className="w-6 text-right text-muted-foreground">{i + 1}.</span>
-              <span>{formatDate(date, timezone)}</span>
+              <span suppressHydrationWarning>{formatDate(date, timezone)}</span>
             </li>
           ))}
         </ol>

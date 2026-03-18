@@ -15,9 +15,13 @@ import { PresetSelector } from "./preset-selector";
 import { CronDescription } from "./cron-description";
 import { NextExecutions } from "./next-executions";
 
+const SSR_DEFAULT_TZ = "Asia/Tokyo";
+
 export function CronExpressionEditorPage() {
   const [expression, setExpression] = useState("* * * * *");
-  const [timezone, setTimezone] = useState(getDefaultTimezone);
+  const [timezone, setTimezone] = useState(() =>
+    typeof window === "undefined" ? SSR_DEFAULT_TZ : getDefaultTimezone(),
+  );
 
   const fields = useMemo(() => splitExpression(expression), [expression]);
   const parseResult = useMemo(
