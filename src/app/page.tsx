@@ -73,8 +73,8 @@ export default function Home() {
           {tools.map((tool) => {
             const Icon = tool.icon;
             return (
-              <Link key={tool.href} href={tool.href}>
-                <Card className="group transition-colors hover:bg-muted/50">
+              <Link key={tool.href} href={tool.href} className="h-full">
+                <Card className="group h-full transition-colors hover:bg-muted/50">
                   <CardHeader className="flex flex-row items-center gap-4">
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
                       <Icon className="h-5 w-5" aria-hidden="true" />
