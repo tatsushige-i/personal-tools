@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Braces, Clock, FileText, Fingerprint, Languages, Package, type LucideIcon } from "lucide-react";
+import { ArrowRight, Braces, Clock, FileText, Fingerprint, Languages, Palette, Package, type LucideIcon } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -50,6 +50,12 @@ const tools: Tool[] = [
     description: "Cron式の組み立て・検証、次回実行予定の表示",
     href: "/tools/cron-expression-editor",
     icon: Clock,
+  },
+  {
+    name: "Color Converter",
+    description: "HEX / RGB / HSL / Tailwind色名の相互変換、コントラスト比チェック",
+    href: "/tools/color-converter",
+    icon: Palette,
   },
 ];
 

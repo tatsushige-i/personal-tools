@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Home } from "lucide-react";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -49,7 +50,9 @@ export default function RootLayout({
               <ThemeToggle />
             </div>
           </header>
-          <main className="mx-auto max-w-5xl px-6 py-8">{children}</main>
+          <TooltipProvider>
+            <main className="mx-auto max-w-5xl px-6 py-8">{children}</main>
+          </TooltipProvider>
         </ThemeProvider>
       </body>
     </html>
