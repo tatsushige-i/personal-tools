@@ -151,4 +151,9 @@ describe("isValidBase64", () => {
     expect(isValidBase64("abcd", true)).toBe(true);
     expect(isValidBase64("a", true)).toBe(false);
   });
+
+  it("URL-safe Base64で末尾の=paddingを許可する", () => {
+    expect(isValidBase64("SGVsbG8=", true)).toBe(true);
+    expect(isValidBase64("ab==", true)).toBe(true);
+  });
 });

@@ -103,7 +103,8 @@ export function detectImageMimeType(base64: string): string | null {
 export function isValidBase64(input: string, urlSafe: boolean): boolean {
   if (input.length === 0) return true;
   if (urlSafe) {
-    return /^[A-Za-z0-9_-]+$/.test(input) && input.length % 4 !== 1;
+    const stripped = input.replace(/=+$/, "");
+    return /^[A-Za-z0-9_-]+$/.test(stripped) && stripped.length % 4 !== 1;
   }
   return /^[A-Za-z0-9+/]+={0,2}$/.test(input) && input.length % 4 === 0;
 }

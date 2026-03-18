@@ -47,7 +47,7 @@ export function Base64EncoderDecoderPage() {
 
       <TextInput value={input} mode={mode} onChange={setInput} />
 
-      <TextOutput result={result} mode={mode} />
+      <TextOutput result={result} mode={mode} input={input} />
 
       <Separator />
 

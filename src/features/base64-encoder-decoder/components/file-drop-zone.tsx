@@ -3,6 +3,7 @@
 import {
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type DragEvent,
@@ -17,12 +18,11 @@ type FileDropZoneProps = {
   urlSafe: boolean;
 };
 
-type FileResult = {
+type RawFile = {
   name: string;
   size: number;
   mimeType: string;
-  base64: string;
-  dataUri: string;
+  bytes: Uint8Array;
 };
 
 function formatFileSize(bytes: number): string {
@@ -33,7 +33,7 @@ function formatFileSize(bytes: number): string {
 
 export function FileDropZone({ urlSafe }: FileDropZoneProps) {
   const [dragOver, setDragOver] = useState(false);
-  const [fileResult, setFileResult] = useState<FileResult | null>(null);
+  const [rawFile, setRawFile] = useState<RawFile | null>(null);
   const [copiedField, setCopiedField] = useState<"base64" | "dataUri" | null>(
     null
   );
@@ -45,26 +45,32 @@ export function FileDropZone({ urlSafe }: FileDropZoneProps) {
     };
   }, []);
 
-  const processFile = useCallback(
-    (file: File) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const bytes = new Uint8Array(reader.result as ArrayBuffer);
-        const base64 = encodeBytes(bytes, urlSafe);
-        const standardBase64 = encodeBytes(bytes, false);
-        const mimeType = file.type || "application/octet-stream";
-        setFileResult({
-          name: file.name,
-          size: file.size,
-          mimeType,
-          base64,
-          dataUri: buildDataUri(standardBase64, mimeType),
-        });
-      };
-      reader.readAsArrayBuffer(file);
-    },
-    [urlSafe]
+  const base64 = useMemo(
+    () => (rawFile ? encodeBytes(rawFile.bytes, urlSafe) : null),
+    [rawFile, urlSafe]
   );
+
+  const dataUri = useMemo(
+    () =>
+      rawFile
+        ? buildDataUri(encodeBytes(rawFile.bytes, false), rawFile.mimeType)
+        : null,
+    [rawFile]
+  );
+
+  const processFile = useCallback((file: File) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (!(reader.result instanceof ArrayBuffer)) return;
+      const bytes = new Uint8Array(reader.result);
+      const mimeType = file.type || "application/octet-stream";
+      setRawFile({ name: file.name, size: file.size, mimeType, bytes });
+    };
+    reader.onerror = () => {
+      setRawFile(null);
+    };
+    reader.readAsArrayBuffer(file);
+  }, []);
 
   const handleDrop = useCallback(
     (e: DragEvent) => {
@@ -126,20 +132,20 @@ export function FileDropZone({ urlSafe }: FileDropZoneProps) {
         />
       </div>
 
-      {fileResult && (
+      {rawFile && base64 && dataUri && (
         <div className="space-y-3">
           <div className="rounded-md border bg-muted/50 p-3 text-sm">
             <p>
               <span className="text-muted-foreground">ファイル名:</span>{" "}
-              {fileResult.name}
+              {rawFile.name}
             </p>
             <p>
               <span className="text-muted-foreground">サイズ:</span>{" "}
-              {formatFileSize(fileResult.size)}
+              {formatFileSize(rawFile.size)}
             </p>
             <p>
               <span className="text-muted-foreground">MIME:</span>{" "}
-              {fileResult.mimeType}
+              {rawFile.mimeType}
             </p>
           </div>
 
@@ -150,7 +156,7 @@ export function FileDropZone({ urlSafe }: FileDropZoneProps) {
                 variant="ghost"
                 size="icon-xs"
                 className="absolute top-2 right-2"
-                onClick={() => handleCopy(fileResult.base64, "base64")}
+                onClick={() => handleCopy(base64, "base64")}
                 aria-label="Base64をコピー"
               >
                 {copiedField === "base64" ? (
@@ -160,7 +166,7 @@ export function FileDropZone({ urlSafe }: FileDropZoneProps) {
                 )}
               </Button>
               <pre className="max-h-32 overflow-auto rounded-md border bg-muted/50 p-4 pr-10 text-sm font-mono break-all whitespace-pre-wrap">
-                {fileResult.base64}
+                {base64}
               </pre>
             </div>
           </div>
@@ -172,7 +178,7 @@ export function FileDropZone({ urlSafe }: FileDropZoneProps) {
                 variant="ghost"
                 size="icon-xs"
                 className="absolute top-2 right-2"
-                onClick={() => handleCopy(fileResult.dataUri, "dataUri")}
+                onClick={() => handleCopy(dataUri, "dataUri")}
                 aria-label="Data URIをコピー"
               >
                 {copiedField === "dataUri" ? (
@@ -182,7 +188,7 @@ export function FileDropZone({ urlSafe }: FileDropZoneProps) {
                 )}
               </Button>
               <pre className="max-h-32 overflow-auto rounded-md border bg-muted/50 p-4 pr-10 text-sm font-mono break-all whitespace-pre-wrap">
-                {fileResult.dataUri}
+                {dataUri}
               </pre>
             </div>
           </div>

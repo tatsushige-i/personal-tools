@@ -11,9 +11,10 @@ import { buildDataUri, detectImageMimeType } from "../lib/base64";
 type TextOutputProps = {
   result: Base64Result | null;
   mode: Mode;
+  input: string;
 };
 
-export function TextOutput({ result, mode }: TextOutputProps) {
+export function TextOutput({ result, mode, input }: TextOutputProps) {
   const [copied, setCopied] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -51,10 +52,11 @@ export function TextOutput({ result, mode }: TextOutputProps) {
   }
 
   // デコードモードで画像が検出された場合、プレビューを表示
+  // 入力Base64文字列に対してMIME判定し、Data URIを生成する
   const imageMimeType =
-    mode === "encode" ? null : detectImageMimeType(result.data);
+    mode === "encode" ? null : detectImageMimeType(input);
   const imageDataUri =
-    imageMimeType ? buildDataUri(result.data, imageMimeType) : null;
+    imageMimeType ? buildDataUri(input, imageMimeType) : null;
 
   return (
     <div className="space-y-2">
