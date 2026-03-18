@@ -140,7 +140,15 @@ describe("isValidBase64", () => {
 
   it("URL-safe Base64を判定する", () => {
     expect(isValidBase64("SGVsbG8", true)).toBe(true);
-    expect(isValidBase64("a-b_c", true)).toBe(true);
     expect(isValidBase64("a+b/c=", true)).toBe(false);
+  });
+
+  it("URL-safe Base64でデコード不可能な長さを拒否する", () => {
+    // len % 4 === 1 はデコード不可能
+    expect(isValidBase64("a-b_c", true)).toBe(false);
+    expect(isValidBase64("ab", true)).toBe(true);
+    expect(isValidBase64("abc", true)).toBe(true);
+    expect(isValidBase64("abcd", true)).toBe(true);
+    expect(isValidBase64("a", true)).toBe(false);
   });
 });

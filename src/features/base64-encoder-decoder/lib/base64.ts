@@ -103,7 +103,7 @@ export function detectImageMimeType(base64: string): string | null {
 export function isValidBase64(input: string, urlSafe: boolean): boolean {
   if (input.length === 0) return true;
   if (urlSafe) {
-    return /^[A-Za-z0-9_-]+$/.test(input);
+    return /^[A-Za-z0-9_-]+$/.test(input) && input.length % 4 !== 1;
   }
   return /^[A-Za-z0-9+/]+={0,2}$/.test(input) && input.length % 4 === 0;
 }
@@ -111,11 +111,13 @@ export function isValidBase64(input: string, urlSafe: boolean): boolean {
 // --- Internal helpers ---
 
 function bytesToBase64(bytes: Uint8Array): string {
-  let binary = "";
-  for (let i = 0; i < bytes.length; i++) {
-    binary += String.fromCharCode(bytes[i]);
+  const CHUNK_SIZE = 8192;
+  const chunks: string[] = [];
+  for (let i = 0; i < bytes.length; i += CHUNK_SIZE) {
+    const chunk = bytes.subarray(i, i + CHUNK_SIZE);
+    chunks.push(String.fromCharCode.apply(null, chunk as unknown as number[]));
   }
-  return btoa(binary);
+  return btoa(chunks.join(""));
 }
 
 function toUrlSafe(base64: string): string {

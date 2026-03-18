@@ -15,7 +15,7 @@ export function Base64EncoderDecoderPage() {
   const [input, setInput] = useState("");
 
   const result = useMemo(() => {
-    if (!input.trim()) return null;
+    if (input.length === 0) return null;
     return mode === "encode"
       ? encodeText(input, urlSafe)
       : decodeText(input, urlSafe);
@@ -39,7 +39,7 @@ export function Base64EncoderDecoderPage() {
       <ModeControls
         mode={mode}
         urlSafe={urlSafe}
-        hasInput={input.trim().length > 0}
+        hasInput={input.length > 0}
         onModeChange={setMode}
         onUrlSafeChange={setUrlSafe}
         onClear={handleClear}

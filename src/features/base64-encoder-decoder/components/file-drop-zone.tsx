@@ -1,6 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type DragEvent,
+  type ChangeEvent,
+} from "react";
 import { Upload, Check, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -44,13 +51,14 @@ export function FileDropZone({ urlSafe }: FileDropZoneProps) {
       reader.onload = () => {
         const bytes = new Uint8Array(reader.result as ArrayBuffer);
         const base64 = encodeBytes(bytes, urlSafe);
+        const standardBase64 = encodeBytes(bytes, false);
         const mimeType = file.type || "application/octet-stream";
         setFileResult({
           name: file.name,
           size: file.size,
           mimeType,
           base64,
-          dataUri: buildDataUri(base64, mimeType),
+          dataUri: buildDataUri(standardBase64, mimeType),
         });
       };
       reader.readAsArrayBuffer(file);
@@ -59,7 +67,7 @@ export function FileDropZone({ urlSafe }: FileDropZoneProps) {
   );
 
   const handleDrop = useCallback(
-    (e: React.DragEvent) => {
+    (e: DragEvent) => {
       e.preventDefault();
       setDragOver(false);
       const file = e.dataTransfer.files[0];
@@ -69,7 +77,7 @@ export function FileDropZone({ urlSafe }: FileDropZoneProps) {
   );
 
   const handleFileSelect = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    (e: ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if (file) processFile(file);
     },

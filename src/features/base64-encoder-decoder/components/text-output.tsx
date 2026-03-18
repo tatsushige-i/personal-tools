@@ -52,7 +52,7 @@ export function TextOutput({ result, mode }: TextOutputProps) {
 
   // デコードモードで画像が検出された場合、プレビューを表示
   const imageMimeType =
-    mode === "decode" ? null : detectImageMimeType(result.data);
+    mode === "encode" ? null : detectImageMimeType(result.data);
   const imageDataUri =
     imageMimeType ? buildDataUri(result.data, imageMimeType) : null;
 
