@@ -105,9 +105,10 @@ export function hslToHex(hsl: HSL): string {
   return rgbToHex(hslToRgb(hsl));
 }
 
-/** Create a full ColorValue from a hex string */
-export function createColorValue(hex: string): ColorValue {
-  const rgb = hexToRgb(hex)!;
+/** Create a full ColorValue from a hex string. Returns null for invalid input. */
+export function createColorValue(hex: string): ColorValue | null {
+  const rgb = hexToRgb(hex);
+  if (!rgb) return null;
   const normalized = rgbToHex(rgb);
   return {
     hex: normalized,

@@ -20,17 +20,27 @@ export function contrastRatio(rgb1: RGB, rgb2: RGB): number {
 
 /** Calculate full contrast result from two hex strings */
 export function calculateContrast(hex1: string, hex2: string): ContrastResult {
-  const rgb1 = hexToRgb(hex1)!;
-  const rgb2 = hexToRgb(hex2)!;
+  const rgb1 = hexToRgb(hex1);
+  const rgb2 = hexToRgb(hex2);
+  if (!rgb1 || !rgb2) {
+    return {
+      ratio: 1,
+      ratioText: "1.00:1",
+      aa: false,
+      aaLarge: false,
+      aaa: false,
+      aaaLarge: false,
+    };
+  }
   const ratio = contrastRatio(rgb1, rgb2);
   const rounded = Math.round(ratio * 100) / 100;
 
   return {
     ratio: rounded,
     ratioText: `${rounded.toFixed(2)}:1`,
-    aa: rounded >= 4.5,
-    aaLarge: rounded >= 3,
-    aaa: rounded >= 7,
-    aaaLarge: rounded >= 4.5,
+    aa: ratio >= 4.5,
+    aaLarge: ratio >= 3,
+    aaa: ratio >= 7,
+    aaaLarge: ratio >= 4.5,
   };
 }

@@ -254,15 +254,19 @@ for (const [name, hex] of Object.entries(TAILWIND_COLORS)) {
 }
 
 export function hexToTailwind(hex: string): string | null {
-  return reverseLookup.get(hex.toLowerCase()) ?? null;
+  const normalized = normalizeHex(hex);
+  if (!normalized) return null;
+  return reverseLookup.get(normalized) ?? null;
 }
 
 /** Find the closest Tailwind color by Euclidean RGB distance */
-export function findClosestTailwind(hex: string): {
-  name: string;
-  hex: string;
-} {
-  const target = hexToRgbSimple(hex);
+export function findClosestTailwind(
+  hex: string,
+): { name: string; hex: string } | null {
+  const normalized = normalizeHex(hex);
+  if (!normalized) return null;
+  const target = hexToRgbSimple(normalized);
+
   let bestName = "";
   let bestHex = "";
   let bestDist = Infinity;
@@ -281,7 +285,19 @@ export function findClosestTailwind(hex: string): {
   return { name: bestName, hex: bestHex };
 }
 
-/** Minimal hex→RGB for internal distance calculation */
+/** Normalize hex to lowercase #rrggbb format, handling 3-digit and missing # */
+function normalizeHex(hex: string): string | null {
+  const cleaned = hex.replace(/^#/, "").toLowerCase();
+  if (cleaned.length === 3 && /^[0-9a-f]{3}$/.test(cleaned)) {
+    return `#${cleaned[0]}${cleaned[0]}${cleaned[1]}${cleaned[1]}${cleaned[2]}${cleaned[2]}`;
+  }
+  if (cleaned.length === 6 && /^[0-9a-f]{6}$/.test(cleaned)) {
+    return `#${cleaned}`;
+  }
+  return null;
+}
+
+/** Minimal hex→RGB for internal distance calculation (expects normalized #rrggbb) */
 function hexToRgbSimple(hex: string): { r: number; g: number; b: number } {
   const h = hex.replace("#", "");
   return {

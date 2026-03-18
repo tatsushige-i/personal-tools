@@ -168,8 +168,13 @@ describe("parseColorInput", () => {
 describe("createColorValue", () => {
   it("creates full color value from hex", () => {
     const color = createColorValue("#3b82f6");
-    expect(color.hex).toBe("#3b82f6");
-    expect(color.rgb).toEqual({ r: 59, g: 130, b: 246 });
-    expect(color.tailwind).toBe("blue-500");
+    expect(color).not.toBeNull();
+    expect(color!.hex).toBe("#3b82f6");
+    expect(color!.rgb).toEqual({ r: 59, g: 130, b: 246 });
+    expect(color!.tailwind).toBe("blue-500");
+  });
+
+  it("returns null for invalid hex", () => {
+    expect(createColorValue("invalid")).toBeNull();
   });
 });

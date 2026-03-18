@@ -31,15 +31,35 @@ describe("hexToTailwind", () => {
   });
 });
 
+describe("hexToTailwind normalization", () => {
+  it("normalizes 3-digit hex", () => {
+    // #f00 → #ff0000 won't match any Tailwind color exactly
+    expect(hexToTailwind("#f00")).toBeNull();
+  });
+
+  it("normalizes hex without #", () => {
+    expect(hexToTailwind("ef4444")).toBe("red-500");
+  });
+
+  it("returns null for invalid input", () => {
+    expect(hexToTailwind("xyz")).toBeNull();
+  });
+});
+
 describe("findClosestTailwind", () => {
   it("returns exact match when available", () => {
     const result = findClosestTailwind("#ef4444");
-    expect(result.name).toBe("red-500");
+    expect(result).not.toBeNull();
+    expect(result!.name).toBe("red-500");
   });
 
   it("returns nearest color for arbitrary hex", () => {
     const result = findClosestTailwind("#ff0000");
-    // Should find a red-ish Tailwind color
-    expect(result.name).toContain("red");
+    expect(result).not.toBeNull();
+    expect(result!.name).toContain("red");
+  });
+
+  it("returns null for invalid input", () => {
+    expect(findClosestTailwind("invalid")).toBeNull();
   });
 });

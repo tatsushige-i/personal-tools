@@ -9,8 +9,8 @@ import { ColorPreview } from "./color-preview";
 import { ContrastChecker } from "./contrast-checker";
 import { PalettePanel } from "./palette-panel";
 
-const INITIAL_COLOR = createColorValue("#3b82f6");
-const INITIAL_BG = createColorValue("#ffffff");
+const INITIAL_COLOR = createColorValue("#3b82f6")!;
+const INITIAL_BG = createColorValue("#ffffff")!;
 
 export function ColorConverterPage() {
   const [currentColor, setCurrentColor] = useState<ColorValue>(INITIAL_COLOR);

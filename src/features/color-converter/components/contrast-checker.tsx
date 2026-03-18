@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useCallback } from "react";
 import { ArrowLeftRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,6 +22,32 @@ type Props = {
   onBackgroundChange: (color: ColorValue) => void;
 };
 
+function useHexInput(
+  color: ColorValue,
+  onChange: (color: ColorValue) => void,
+) {
+  // null = not editing, string = user is typing
+  const [draft, setDraft] = useState<string | null>(null);
+
+  const displayText = draft ?? color.hex;
+
+  const handleChange = useCallback((value: string) => {
+    setDraft(value);
+  }, []);
+
+  const commit = useCallback(() => {
+    if (draft === null) return;
+    const cleaned = draft.startsWith("#") ? draft : `#${draft}`;
+    if (/^#[0-9a-fA-F]{6}$/.test(cleaned)) {
+      const cv = createColorValue(cleaned.toLowerCase());
+      if (cv) onChange(cv);
+    }
+    setDraft(null);
+  }, [draft, onChange]);
+
+  return { text: displayText, handleChange, commit };
+}
+
 export function ContrastChecker({
   foreground,
   background,
@@ -29,14 +56,8 @@ export function ContrastChecker({
 }: Props) {
   const result = calculateContrast(foreground.hex, background.hex);
 
-  const handleColorChange = (
-    hex: string,
-    setter: (color: ColorValue) => void,
-  ) => {
-    if (/^#[0-9a-fA-F]{6}$/.test(hex)) {
-      setter(createColorValue(hex.toLowerCase()));
-    }
-  };
+  const fg = useHexInput(foreground, onForegroundChange);
+  const bg = useHexInput(background, onBackgroundChange);
 
   const swap = () => {
     onForegroundChange(background);
@@ -66,17 +87,19 @@ export function ContrastChecker({
             <input
               type="color"
               value={foreground.hex}
-              onChange={(e) =>
-                onForegroundChange(createColorValue(e.target.value))
-              }
+              onChange={(e) => {
+                const cv = createColorValue(e.target.value);
+                if (cv) onForegroundChange(cv);
+              }}
+              aria-label="前景色ピッカー"
               className="h-9 w-12 cursor-pointer rounded-md border"
             />
             <Input
               id="contrast-fg"
-              value={foreground.hex}
-              onChange={(e) =>
-                handleColorChange(e.target.value, onForegroundChange)
-              }
+              value={fg.text}
+              onChange={(e) => fg.handleChange(e.target.value)}
+              onBlur={fg.commit}
+              onKeyDown={(e) => e.key === "Enter" && fg.commit()}
               className="font-mono"
             />
           </div>
@@ -87,9 +110,10 @@ export function ContrastChecker({
           variant="outline"
           size="icon"
           onClick={swap}
+          aria-label="前景色と背景色を入れ替え"
           className="mb-0.5"
         >
-          <ArrowLeftRight className="h-4 w-4" />
+          <ArrowLeftRight className="h-4 w-4" aria-hidden />
         </Button>
 
         {/* Background */}
@@ -99,17 +123,19 @@ export function ContrastChecker({
             <input
               type="color"
               value={background.hex}
-              onChange={(e) =>
-                onBackgroundChange(createColorValue(e.target.value))
-              }
+              onChange={(e) => {
+                const cv = createColorValue(e.target.value);
+                if (cv) onBackgroundChange(cv);
+              }}
+              aria-label="背景色ピッカー"
               className="h-9 w-12 cursor-pointer rounded-md border"
             />
             <Input
               id="contrast-bg"
-              value={background.hex}
-              onChange={(e) =>
-                handleColorChange(e.target.value, onBackgroundChange)
-              }
+              value={bg.text}
+              onChange={(e) => bg.handleChange(e.target.value)}
+              onBlur={bg.commit}
+              onKeyDown={(e) => e.key === "Enter" && bg.commit()}
               className="font-mono"
             />
           </div>

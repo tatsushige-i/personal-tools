@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
@@ -18,19 +18,25 @@ type Props = {
 };
 
 export function ColorInputPanel({ color, onChange }: Props) {
-  const handleHexChange = useCallback(
-    (value: string) => {
-      const cleaned = value.startsWith("#") ? value : `#${value}`;
-      if (/^#[0-9a-fA-F]{6}$/.test(cleaned)) {
-        onChange(createColorValue(cleaned.toLowerCase()));
-      }
-    },
-    [onChange],
-  );
+  // null = not editing, string = user is typing
+  const [hexDraft, setHexDraft] = useState<string | null>(null);
+
+  const displayHex = hexDraft ?? color.hex;
+
+  const commitHex = useCallback(() => {
+    if (hexDraft === null) return;
+    const cleaned = hexDraft.startsWith("#") ? hexDraft : `#${hexDraft}`;
+    if (/^#[0-9a-fA-F]{6}$/.test(cleaned)) {
+      const cv = createColorValue(cleaned.toLowerCase());
+      if (cv) onChange(cv);
+    }
+    setHexDraft(null);
+  }, [hexDraft, onChange]);
 
   const handlePickerChange = useCallback(
     (value: string) => {
-      onChange(createColorValue(value));
+      const cv = createColorValue(value);
+      if (cv) onChange(cv);
     },
     [onChange],
   );
@@ -40,7 +46,8 @@ export function ColorInputPanel({ color, onChange }: Props) {
       const num = parseInt(value);
       if (isNaN(num) || num < 0 || num > 255) return;
       const rgb = { ...color.rgb, [channel]: num };
-      onChange(createColorValue(rgbToHex(rgb)));
+      const cv = createColorValue(rgbToHex(rgb));
+      if (cv) onChange(cv);
     },
     [color.rgb, onChange],
   );
@@ -53,7 +60,8 @@ export function ColorInputPanel({ color, onChange }: Props) {
       if (num < 0 || num > max) return;
       const hsl = { ...color.hsl, [channel]: num };
       const rgb = hslToRgb(hsl);
-      onChange(createColorValue(rgbToHex(rgb)));
+      const cv = createColorValue(rgbToHex(rgb));
+      if (cv) onChange(cv);
     },
     [color.hsl, onChange],
   );
@@ -64,8 +72,9 @@ export function ColorInputPanel({ color, onChange }: Props) {
     <div className="space-y-4">
       {/* Color Picker */}
       <div className="space-y-2">
-        <Label>カラーピッカー</Label>
+        <Label htmlFor="color-picker">カラーピッカー</Label>
         <input
+          id="color-picker"
           type="color"
           value={color.hex}
           onChange={(e) => handlePickerChange(e.target.value)}
@@ -78,8 +87,10 @@ export function ColorInputPanel({ color, onChange }: Props) {
         <Label htmlFor="hex-input">HEX</Label>
         <Input
           id="hex-input"
-          value={color.hex}
-          onChange={(e) => handleHexChange(e.target.value)}
+          value={displayHex}
+          onChange={(e) => setHexDraft(e.target.value)}
+          onBlur={commitHex}
+          onKeyDown={(e) => e.key === "Enter" && commitHex()}
           placeholder="#000000"
           className="font-mono"
         />
@@ -150,7 +161,10 @@ export function ColorInputPanel({ color, onChange }: Props) {
             <button
               type="button"
               className="font-mono underline underline-offset-2 hover:text-foreground"
-              onClick={() => onChange(createColorValue(closest.hex))}
+              onClick={() => {
+                const cv = createColorValue(closest.hex);
+                if (cv) onChange(cv);
+              }}
             >
               {closest.name}
             </button>
