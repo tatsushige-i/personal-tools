@@ -19,8 +19,11 @@ export const COMMON_TIMEZONES: TimezoneOption[] = [
 
 export function getDefaultTimezone(): string {
   try {
-    return Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (!tz) return "Asia/Tokyo";
+    if (COMMON_TIMEZONES.some((t) => t.value === tz)) return tz;
+    return "Asia/Tokyo";
   } catch {
-    return "UTC";
+    return "Asia/Tokyo";
   }
 }

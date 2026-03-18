@@ -53,7 +53,7 @@ describe("buildExpression", () => {
 });
 
 describe("describeCron", () => {
-  it("returns a human-readable description in Japanese", () => {
+  it("returns a human-readable description in English", () => {
     const desc = describeCron("0 9 * * 1-5");
     expect(desc).toBeTruthy();
     expect(typeof desc).toBe("string");

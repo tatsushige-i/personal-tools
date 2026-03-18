@@ -13,11 +13,11 @@ const FIELD_ORDER = [
 export function splitExpression(expression: string): CronFields {
   const parts = expression.trim().split(/\s+/);
   return {
-    minute: parts[0] ?? "*",
-    hour: parts[1] ?? "*",
-    dayOfMonth: parts[2] ?? "*",
-    month: parts[3] ?? "*",
-    dayOfWeek: parts[4] ?? "*",
+    minute: parts[0] || "*",
+    hour: parts[1] || "*",
+    dayOfMonth: parts[2] || "*",
+    month: parts[3] || "*",
+    dayOfWeek: parts[4] || "*",
   };
 }
 
