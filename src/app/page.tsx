@@ -39,6 +39,12 @@ const tools: Tool[] = [
     href: "/tools/markdown-preview",
     icon: FileText,
   },
+  {
+    name: "Base64 Encoder / Decoder",
+    description: "テキスト⇔Base64の相互変換、ファイルエンコード・Data URI生成",
+    href: "/tools/base64-encoder-decoder",
+    icon: Package,
+  },
 ];
 
 export default function Home() {
