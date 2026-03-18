@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Braces, FileText, Fingerprint, Languages, Package, type LucideIcon } from "lucide-react";
+import { ArrowRight, Braces, Clock, FileText, Fingerprint, Languages, Package, type LucideIcon } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -44,6 +44,12 @@ const tools: Tool[] = [
     description: "テキスト⇔Base64の相互変換、ファイルエンコード・Data URI生成",
     href: "/tools/base64-encoder-decoder",
     icon: Package,
+  },
+  {
+    name: "Cron Expression Editor",
+    description: "Cron式の組み立て・検証、次回実行予定の表示",
+    href: "/tools/cron-expression-editor",
+    icon: Clock,
   },
 ];
 
