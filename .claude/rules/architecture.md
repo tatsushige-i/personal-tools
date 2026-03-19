@@ -26,3 +26,9 @@
 5. **バックエンドロジックはAPIルートで。** サーバーサイドロジック（DB、外部API）が必要な場合は `app/api/` のRoute Handlersを使用する。
 6. **shadcn/uiコンポーネントを使う。** 標準的なUI要素（ボタン、カード、ダイアログなど）はshadcn/uiを使用または追加する。自作しない。
 7. **`@/` インポートエイリアスを使う。** インポートには常に `@/` プレフィックスを使用する（例: `@/components/ui/button`）。現在のfeatureより上の相対インポートは禁止。
+
+## 新しいツールの追加手順
+
+1. `src/features/<tool-name>/components/` と `src/features/<tool-name>/lib/` を作成
+2. `src/app/tools/<tool-name>/page.tsx` を作成し、featureからインポート
+3. `src/app/page.tsx` の `tools` 配列にツールのエントリを追加
