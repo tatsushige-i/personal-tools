@@ -38,20 +38,4 @@ src/
 └── lib/                    # 共有ユーティリティ（utils.tsなど）
 ```
 
-### レイヤー分離パターン
-
-各ツールは3層パターンに従う：
-
-1. **ルート** (`app/tools/xxx/page.tsx`) — 薄いルーティング層。features/からインポート
-2. **UI** (`features/xxx/components/`) — プレゼンテーションのみ
-3. **ロジック** (`features/xxx/lib/`) — データ取得、ビジネスロジック。DB追加時はこの層のみ変更
-
-### 新しいツールの追加手順
-
-1. `src/features/<tool-name>/components/` と `src/features/<tool-name>/lib/` を作成
-2. `src/app/tools/<tool-name>/page.tsx` を作成し、featureからインポート
-3. `src/app/page.tsx` の `tools` 配列にツールのエントリを追加
-
-### インポートエイリアス
-
-`@/*` は `./src/*` にマッピング（例: `import { Button } from "@/components/ui/button"`）
+詳細なルールは `.claude/rules/architecture.md` を参照。
