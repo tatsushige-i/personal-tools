@@ -77,8 +77,8 @@ export function TextRewriterPage() {
       )}
 
       {error &&
-        (error.errorCode === "RATE_LIMITED" ||
-          error.errorCode === "SERVER_ERROR") && (
+        error.errorCode &&
+        error.errorCode !== "PROMPT_INJECTION_DETECTED" && (
           <Alert variant="destructive" role="alert">
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>エラー</AlertTitle>

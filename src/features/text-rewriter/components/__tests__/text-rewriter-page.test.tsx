@@ -102,12 +102,10 @@ describe("TextRewriterPage", () => {
   });
 
   it("クライアントバリデーションエラー時はインラインpタグで表示する", async () => {
-    const user = userEvent.setup();
-
     render(<TextRewriterPage />);
 
     const button = screen.getByRole("button", { name: "変換" });
-    await user.click(button);
+    await userEvent.click(button);
 
     await waitFor(() => {
       expect(screen.getByRole("alert")).toBeInTheDocument();
