@@ -57,7 +57,7 @@ description: Create a GitHub PR from the current branch - analyze changes, check
    | `docs/`        | `docs: `                  |
    | `chore/`       | `chore: `                 |
 
-### Step 5: PRドラフト作成・ユーザー確認
+### Step 5: PR作成
 
 1. PRタイトルを生成する（70文字以内、Step 4で推定したプレフィックスを使用）
 2. PR本文を以下のテンプレートで生成する:
@@ -75,22 +75,7 @@ description: Create a GitHub PR from the current branch - analyze changes, check
    🤖 Generated with [Claude Code](https://claude.com/claude-code)
    ```
 
-3. タイトルと本文をユーザーに提示し、承認を得る:
-   ```
-   ## PRドラフト
-
-   タイトル: <タイトル>
-
-   <本文>
-
-   この内容でPRを作成してよいですか？
-   ```
-
-**ユーザーの承認を得てから次のステップに進むこと。** ユーザーがタイトルや本文の変更を求めた場合はそれに従う。
-
-### Step 6: PR作成
-
-1. `gh pr create --base main --title "..." --body "..."` でPRを作成する
+3. `gh pr create --base main --title "..." --body "..."` でPRを作成する
    - bodyはheredocを使用してフォーマットを保持する:
      ```
      gh pr create --base main --title "<タイトル>" --body "$(cat <<'EOF'
@@ -98,9 +83,9 @@ description: Create a GitHub PR from the current branch - analyze changes, check
      EOF
      )"
      ```
-2. 失敗した場合はエラーメッセージを表示して終了する
+4. 失敗した場合はエラーメッセージを表示して終了する
 
-### Step 7: 結果表示
+### Step 6: 結果表示
 
 作成結果を以下の形式で表示する:
 
