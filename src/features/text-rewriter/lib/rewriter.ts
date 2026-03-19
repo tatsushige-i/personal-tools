@@ -1,4 +1,14 @@
-import type { RewriteMode, RewriteRequest, RewriteResponse } from "./types";
+import type { ApiErrorCode, RewriteMode, RewriteRequest, RewriteResponse } from "./types";
+
+export class RewriteError extends Error {
+  readonly errorCode: ApiErrorCode | undefined;
+
+  constructor(message: string, errorCode?: ApiErrorCode) {
+    super(message);
+    this.name = "RewriteError";
+    this.errorCode = errorCode;
+  }
+}
 
 export const REWRITE_MODE_OPTIONS: { value: RewriteMode; label: string }[] = [
   { value: "casual-to-business", label: "カジュアル → ビジネス敬語" },
@@ -60,7 +70,7 @@ export async function rewriteText(
     const body = await res.json().catch(() => null);
     const message =
       body?.error ?? `変換に失敗しました。（${res.status}）`;
-    throw new Error(message);
+    throw new RewriteError(message, body?.errorCode);
   }
 
   return res.json();

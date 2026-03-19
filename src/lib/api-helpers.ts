@@ -17,7 +17,7 @@ export function rateLimitResponse(retryAfterMs: number): Response {
   const retryAfterSeconds = Math.ceil(retryAfterMs / 1000);
 
   return Response.json(
-    { error: "リクエストが多すぎます。しばらく経ってから再度お試しください。" },
+    { error: "リクエストが多すぎます。しばらく経ってから再度お試しください。", errorCode: "RATE_LIMITED" },
     {
       status: 429,
       headers: {
