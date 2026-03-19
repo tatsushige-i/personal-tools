@@ -1,3 +1,9 @@
+export type ApiErrorCode =
+  | "PROMPT_INJECTION_DETECTED"
+  | "VALIDATION_ERROR"
+  | "RATE_LIMITED"
+  | "SERVER_ERROR";
+
 export type RewriteMode =
   | "casual-to-business"
   | "business-to-casual"
