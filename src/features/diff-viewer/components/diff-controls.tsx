@@ -17,7 +17,7 @@ type DiffControlsProps = {
   onDiffModeChange: (mode: DiffMode) => void;
   inputMode: InputMode;
   onInputModeChange: (mode: InputMode) => void;
-  onExport: () => void;
+  onExport: () => Promise<boolean>;
   canExport: boolean;
 };
 
@@ -32,8 +32,9 @@ export function DiffControls({
   const [copied, setCopied] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const handleExport = useCallback(() => {
-    onExport();
+  const handleExport = useCallback(async () => {
+    const success = await onExport();
+    if (!success) return;
     setCopied(true);
     if (timerRef.current) clearTimeout(timerRef.current);
     timerRef.current = setTimeout(() => setCopied(false), 2000);

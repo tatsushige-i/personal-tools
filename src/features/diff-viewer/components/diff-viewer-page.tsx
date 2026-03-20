@@ -18,16 +18,18 @@ export function DiffViewerPage() {
     return computeDiff(leftText, rightText, diffMode, inputMode);
   }, [leftText, rightText, diffMode, inputMode]);
 
-  const canExport = leftText.trim().length > 0 || rightText.trim().length > 0;
+  const canExport = !!diffResult?.success;
 
-  const handleExport = useCallback(async () => {
+  const handleExport = useCallback(async (): Promise<boolean> => {
+    if (!diffResult?.success) return false;
     const unified = exportUnifiedDiff(leftText, rightText, inputMode);
     try {
       await navigator.clipboard.writeText(unified);
+      return true;
     } catch {
-      // Clipboard API unavailable
+      return false;
     }
-  }, [leftText, rightText, inputMode]);
+  }, [leftText, rightText, inputMode, diffResult]);
 
   return (
     <div className="space-y-6">
@@ -50,12 +52,14 @@ export function DiffViewerPage() {
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <DiffInputPanel
+          id="diff-original"
           label="Original"
           value={leftText}
           onChange={setLeftText}
           inputMode={inputMode}
         />
         <DiffInputPanel
+          id="diff-modified"
           label="Modified"
           value={rightText}
           onChange={setRightText}
