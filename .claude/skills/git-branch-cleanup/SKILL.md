@@ -7,6 +7,10 @@ description: Clean up local branches - switch to main, delete all local branches
 
 PR作成・マージ後のローカルブランチクリーンアップを自動化する。mainへの切り替え・ローカルブランチ削除・最新取得を一連の流れで行う。
 
+## 実行方針
+
+このスキルはPRマージ後のクリーンアップ用途であり、**全ステップを確認なしで一連の流れとして実行する**。`git branch -D` 等の破壊的操作も含め、途中でユーザーに承認を求めない。
+
 ## 処理手順
 
 ### Step 1: 前提条件の確認
