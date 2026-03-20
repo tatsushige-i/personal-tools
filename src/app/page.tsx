@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Braces, Clock, FileText, Fingerprint, Languages, Palette, Package, type LucideIcon } from "lucide-react";
+import { ArrowRight, Braces, Clock, FileText, Fingerprint, FileDiff, Languages, Palette, Package, type LucideIcon } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -56,6 +56,12 @@ const tools: Tool[] = [
     description: "HEX / RGB / HSL / Tailwind色名の相互変換、コントラスト比チェック",
     href: "/tools/color-converter",
     icon: Palette,
+  },
+  {
+    name: "Diff Viewer",
+    description: "テキスト・JSONの差分表示、行単位/単語単位のdiffモード、unified diffエクスポート",
+    href: "/tools/diff-viewer",
+    icon: FileDiff,
   },
 ];
 
