@@ -29,6 +29,53 @@
 
 ## 新しいツールの追加手順
 
+### 概要
+
 1. `src/features/<tool-name>/components/` と `src/features/<tool-name>/lib/` を作成
 2. `src/app/tools/<tool-name>/page.tsx` を作成し、featureからインポート
 3. `src/app/page.tsx` の `tools` 配列にツールのエントリを追加
+
+### スキャフォールドテンプレート
+
+`feature` ラベルのIssueで新しいツールを追加する場合、以下のテンプレートでファイルを生成する。
+
+**`src/app/tools/<tool>/page.tsx`**（ルートファイル）:
+```tsx
+import { <ToolName>Page } from "@/features/<tool>/components/<tool>-page";
+
+export default function Page() {
+  return <<ToolName>Page />;
+}
+```
+
+**`src/features/<tool>/components/<tool>-page.tsx`**（メインコンポーネント）:
+```tsx
+"use client";
+
+export function <ToolName>Page() {
+  return (
+    <div>
+      <h1 className="text-2xl font-bold tracking-tight"><Tool Display Name></h1>
+      <p className="mt-2 text-muted-foreground">
+        TODO: ツールの説明
+      </p>
+    </div>
+  );
+}
+```
+
+**`src/features/<tool>/lib/types.ts`**（型定義ファイル）:
+```ts
+// TODO: ツール固有の型定義
+```
+
+**`src/app/page.tsx`**（`tools` 配列にエントリ追加）:
+```ts
+{
+  name: "<Tool Display Name>",
+  description: "TODO: ツールの説明",
+  href: "/tools/<tool>",
+  icon: Package,
+},
+```
+※ `Package` アイコンは `lucide-react` からのインポートが必要。既にインポートされていない場合は追加する。
