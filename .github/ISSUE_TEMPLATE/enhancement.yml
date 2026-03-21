@@ -1,5 +1,5 @@
 name: Enhancement
-description: 新機能の提案や既存機能の改善
+description: 既存機能の改善・拡張
 labels: ["enhancement"]
 body:
   - type: textarea
