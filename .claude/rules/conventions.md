@@ -1,43 +1,43 @@
-# プロジェクト固有規約
+# Project-Specific Conventions
 
-## テスト規約
+## Testing Conventions
 
-### テストファイル配置
+### Test File Placement
 
-テスト対象ファイルに隣接する `__tests__/` ディレクトリに配置する。
+Place test files in a `__tests__/` directory adjacent to the file under test.
 
 ```
-src/components/__tests__/theme-toggle.test.tsx   ← src/components/theme-toggle.tsx のテスト
-src/features/xxx/lib/__tests__/utils.test.ts     ← src/features/xxx/lib/utils.ts のテスト
+src/components/__tests__/theme-toggle.test.tsx   ← test for src/components/theme-toggle.tsx
+src/features/xxx/lib/__tests__/utils.test.ts     ← test for src/features/xxx/lib/utils.ts
 ```
 
-### 命名規則
+### Naming Rules
 
-- テストファイル: `<対象ファイル名>.test.ts(x)`
-- TSXコンポーネントのテストは `.test.tsx`、純粋なロジックのテストは `.test.ts`
+- Test files: `<target-file-name>.test.ts(x)`
+- Use `.test.tsx` for TSX component tests, `.test.ts` for pure logic tests
 
-### テスト方針
+### Testing Policy
 
-- **ユーザー視点（振る舞い）のテスト**を書く。内部実装の詳細をテストしない。
-- 要素のクエリには **role** や **accessible name** を使用する（`getByRole`, `getByLabelText` 等）。
-- テストIDやクラス名でのクエリは最終手段とする。
+- Write **user-perspective (behavioral) tests**. Do not test internal implementation details.
+- Use **role** and **accessible name** for element queries (`getByRole`, `getByLabelText`, etc.).
+- Use test IDs or class names only as a last resort.
 
-### テスト必須対象
+### Required Test Targets
 
-- **ロジック層** (`features/xxx/lib/`): ビジネスロジック・データ変換
-- **インタラクティブUIコンポーネント**: ユーザー操作を伴うコンポーネント
-- **共有コンポーネント** (`src/components/`): 複数箇所で使われるコンポーネント
+- **Logic layer** (`features/xxx/lib/`): business logic and data transformations
+- **Interactive UI components**: components involving user interactions
+- **Shared components** (`src/components/`): components used in multiple places
 
-### テスト任意対象
+### Optional Test Targets
 
-- **純粋表示コンポーネント**: propsを受け取って表示するだけのコンポーネント
+- **Pure display components**: components that only receive props and render output
 
-### カバレッジ目標
+### Coverage Goals
 
-- カバレッジ目標: **80%**（ロジック層・共有コンポーネント）
-- 純粋表示コンポーネントはカバレッジ対象外としてもよい
+- Coverage target: **80%** (logic layer and shared components)
+- Pure display components may be excluded from coverage targets
 
-### テスト実行の必須化
+### Mandatory Test Execution
 
-- `npm run test` は `build` / `lint` と並ぶ必須チェックステップとする
-- PR提出前にローカルでテストが通ることを確認する
+- `npm run test` is a required check step alongside `build` and `lint`
+- Confirm tests pass locally before submitting a PR

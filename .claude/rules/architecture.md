@@ -1,45 +1,45 @@
-# アーキテクチャルール
+# Architecture Rules
 
-## レイヤー分離
+## Layer Separation
 
-ルーティング・UI・ロジックを3層に厳密に分離する：
+Strictly separate routing, UI, and logic into three layers:
 
-- `app/tools/xxx/page.tsx` — **ルート層**。薄く保つ。`features/` からインポートしてコンポーネントを組み合わせるだけ。ビジネスロジックは置かない。
-- `features/xxx/components/` — **UI層**。プレゼンテーション専用のReactコンポーネント。propsでデータを受け取る。直接のデータ取得やAPI呼び出しは行わない。
-- `features/xxx/lib/` — **ロジック層**。データ取得・変換・ビジネスロジックはすべてここに置く。データソースを変更する際（DB追加など）に変更されるのはこの層のみ。
+- `app/tools/xxx/page.tsx` — **Route layer**. Keep it thin. Only import from `features/` and compose components. No business logic.
+- `features/xxx/components/` — **UI layer**. Presentation-only React components. Receive data via props. No direct data fetching or API calls.
+- `features/xxx/lib/` — **Logic layer**. All data fetching, transformation, and business logic goes here. When changing data sources (e.g., adding a database), only this layer should be modified.
 
-## ディレクトリの責務
+## Directory Responsibilities
 
-- `src/components/ui/` — shadcn/ui管理の共有UIコンポーネント。生成ファイルは手動編集しない。`npx shadcn@latest add <component>` で追加する。
-- `src/components/`（ui以外） — プロジェクト全体の共有コンポーネント（ナビゲーション、レイアウト部品など）。
-- `src/components/__tests__/` — 共有コンポーネントのテスト。
-- `src/features/<tool>/` — 各ツール固有のコード。feature間のインポートは禁止。共有する場合は `src/lib/` または `src/components/` に抽出する。
-- `src/features/<tool>/lib/__tests__/` — ロジック層のテスト。
-- `src/lib/` — 複数featureで使う共有ユーティリティ・ヘルパー。
+- `src/components/ui/` — Shared UI components managed by shadcn/ui. Do not manually edit generated files. Add with `npx shadcn@latest add <component>`.
+- `src/components/` (non-ui) — Project-wide shared components (navigation, layout parts, etc.).
+- `src/components/__tests__/` — Tests for shared components.
+- `src/features/<tool>/` — Tool-specific code. Cross-feature imports are prohibited. Extract shared code to `src/lib/` or `src/components/`.
+- `src/features/<tool>/lib/__tests__/` — Tests for the logic layer.
+- `src/lib/` — Shared utilities and helpers used across multiple features.
 
-## ルール
+## Rules
 
-1. **feature間インポート禁止。** `features/a/` から `features/b/` をインポートしない。共有コードは `src/lib/` または `src/components/` に置く。
-2. **ルートファイルは薄く。** `app/**/page.tsx` は最小限のコード — インポート、必要に応じたServer Componentsでのデータ取得、コンポーネント合成のみ。
-3. **Client Componentsは明示的に。** `"use client"` はブラウザAPIやインタラクティビティが必要な場合のみ。デフォルトはServer Components。
-4. **ツールコードの集約。** ツールのコードはすべて `features/<tool-name>/` 配下に置く。関係ないディレクトリに散在させない。
-5. **バックエンドロジックはAPIルートで。** サーバーサイドロジック（DB、外部API）が必要な場合は `app/api/` のRoute Handlersを使用する。
-6. **shadcn/uiコンポーネントを使う。** 標準的なUI要素（ボタン、カード、ダイアログなど）はshadcn/uiを使用または追加する。自作しない。
-7. **`@/` インポートエイリアスを使う。** インポートには常に `@/` プレフィックスを使用する（例: `@/components/ui/button`）。現在のfeatureより上の相対インポートは禁止。
+1. **No cross-feature imports.** Do not import from `features/b/` within `features/a/`. Place shared code in `src/lib/` or `src/components/`.
+2. **Keep route files thin.** `app/**/page.tsx` should contain minimal code — imports, Server Component data fetching if needed, and component composition only.
+3. **Explicit Client Components.** Use `"use client"` only when browser APIs or interactivity are required. Default to Server Components.
+4. **Colocate tool code.** All code for a tool goes under `features/<tool-name>/`. Do not scatter it across unrelated directories.
+5. **Backend logic in API routes.** Use `app/api/` Route Handlers for server-side logic (database, external APIs).
+6. **Use shadcn/ui components.** Use or add shadcn/ui for standard UI elements (buttons, cards, dialogs, etc.). Do not build custom alternatives.
+7. **Use the `@/` import alias.** Always use the `@/` prefix for imports (e.g., `@/components/ui/button`). Relative imports above the current feature are prohibited.
 
-## 新しいツールの追加手順
+## Adding a New Tool
 
-### 概要
+### Overview
 
-1. `src/features/<tool-name>/components/` と `src/features/<tool-name>/lib/` を作成
-2. `src/app/tools/<tool-name>/page.tsx` を作成し、featureからインポート
-3. `src/app/page.tsx` の `tools` 配列にツールのエントリを追加
+1. Create `src/features/<tool-name>/components/` and `src/features/<tool-name>/lib/`
+2. Create `src/app/tools/<tool-name>/page.tsx` and import from the feature
+3. Add a tool entry to the `tools` array in `src/app/page.tsx`
 
-### スキャフォールドテンプレート
+### Scaffold Template
 
-`feature` ラベルのIssueで新しいツールを追加する場合、以下のテンプレートでファイルを生成する。
+When adding a new tool via a `feature`-labeled Issue, generate files using the following templates.
 
-**`src/app/tools/<tool>/page.tsx`**（ルートファイル）:
+**`src/app/tools/<tool>/page.tsx`** (route file):
 ```tsx
 import { <ToolName>Page } from "@/features/<tool>/components/<tool>-page";
 
@@ -48,7 +48,7 @@ export default function Page() {
 }
 ```
 
-**`src/features/<tool>/components/<tool>-page.tsx`**（メインコンポーネント）:
+**`src/features/<tool>/components/<tool>-page.tsx`** (main component):
 ```tsx
 "use client";
 
@@ -57,25 +57,25 @@ export function <ToolName>Page() {
     <div>
       <h1 className="text-2xl font-bold tracking-tight"><Tool Display Name></h1>
       <p className="mt-2 text-muted-foreground">
-        TODO: ツールの説明
+        TODO: Tool description
       </p>
     </div>
   );
 }
 ```
 
-**`src/features/<tool>/lib/types.ts`**（型定義ファイル）:
+**`src/features/<tool>/lib/types.ts`** (type definitions):
 ```ts
-// TODO: ツール固有の型定義
+// TODO: Tool-specific type definitions
 ```
 
-**`src/app/page.tsx`**（`tools` 配列にエントリ追加）:
+**`src/app/page.tsx`** (add entry to `tools` array):
 ```ts
 {
   name: "<Tool Display Name>",
-  description: "TODO: ツールの説明",
+  description: "TODO: Tool description",
   href: "/tools/<tool>",
   icon: Package,
 },
 ```
-※ `Package` アイコンは `lucide-react` からのインポートが必要。既にインポートされていない場合は追加する。
+Note: The `Package` icon requires an import from `lucide-react`. Add the import if not already present.
