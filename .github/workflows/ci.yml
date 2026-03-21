@@ -14,6 +14,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - run: npm ci
+
       - name: Check Node.js EOL
         run: |
           eol=$(curl -sf https://endoflife.date/api/nodejs/$NODE_VERSION.json | jq -r '.eol')
@@ -23,6 +32,9 @@ jobs:
             echo "::error::Node.js $NODE_VERSION has reached EOL ($eol)"
             exit 1
           fi
+
+      - name: Check npm audit
+        run: npm audit --omit=dev --audit-level=moderate
 
   lint:
     runs-on: ubuntu-latest
