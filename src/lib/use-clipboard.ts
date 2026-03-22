@@ -28,9 +28,9 @@ export function useClipboard(timeout = DEFAULT_TIMEOUT) {
     };
   }, []);
 
-  const markCopied = useCallback(() => {
+  const markCopied = useCallback((value = "") => {
     if (timerRef.current) clearTimeout(timerRef.current);
-    setCopiedValue("__marked__");
+    setCopiedValue(value);
     timerRef.current = setTimeout(() => setCopiedValue(null), timeout);
   }, [timeout]);
 
