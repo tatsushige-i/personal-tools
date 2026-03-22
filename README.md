@@ -1,3 +1,5 @@
+**Language:** English | [日本語](docs/ja-JP/README.md)
+
 # Personal Tools
 
 A collection of personal utility tools built with Next.js.
