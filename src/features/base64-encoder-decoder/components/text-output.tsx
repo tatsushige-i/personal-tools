@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { useClipboard } from "@/lib/use-clipboard";
 import { Check, Copy } from "lucide-react";
 import type { Mode } from "../lib/types";
 import type { Base64Result } from "../lib/types";
@@ -15,26 +15,7 @@ type TextOutputProps = {
 };
 
 export function TextOutput({ result, mode, input }: TextOutputProps) {
-  const [copied, setCopied] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
-  }, []);
-
-  const handleCopy = useCallback(async () => {
-    if (!result?.success) return;
-    try {
-      await navigator.clipboard.writeText(result.data);
-      setCopied(true);
-      if (timerRef.current) clearTimeout(timerRef.current);
-      timerRef.current = setTimeout(() => setCopied(false), 2000);
-    } catch {
-      // Clipboard API unavailable
-    }
-  }, [result]);
+  const { copy, isCopied } = useClipboard();
 
   if (!result) return null;
 
@@ -66,10 +47,10 @@ export function TextOutput({ result, mode, input }: TextOutputProps) {
           variant="ghost"
           size="icon-xs"
           className="absolute top-2 right-2"
-          onClick={handleCopy}
+          onClick={() => copy(result.data)}
           aria-label="コピー"
         >
-          {copied ? (
+          {isCopied ? (
             <Check className="size-3" />
           ) : (
             <Copy className="size-3" />

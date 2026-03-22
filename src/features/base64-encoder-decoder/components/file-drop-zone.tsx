@@ -2,9 +2,7 @@
 
 import {
   useCallback,
-  useEffect,
   useMemo,
-  useRef,
   useState,
   type DragEvent,
   type ChangeEvent,
@@ -12,6 +10,7 @@ import {
 import { Upload, Check, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { useClipboard } from "@/lib/use-clipboard";
 import { encodeBytes, buildDataUri } from "../lib/base64";
 
 type FileDropZoneProps = {
@@ -34,16 +33,7 @@ function formatFileSize(bytes: number): string {
 export function FileDropZone({ urlSafe }: FileDropZoneProps) {
   const [dragOver, setDragOver] = useState(false);
   const [rawFile, setRawFile] = useState<RawFile | null>(null);
-  const [copiedField, setCopiedField] = useState<"base64" | "dataUri" | null>(
-    null
-  );
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
-  }, []);
+  const { copy, copiedValue } = useClipboard();
 
   const base64 = useMemo(
     () => (rawFile ? encodeBytes(rawFile.bytes, urlSafe) : null),
@@ -88,20 +78,6 @@ export function FileDropZone({ urlSafe }: FileDropZoneProps) {
       if (file) processFile(file);
     },
     [processFile]
-  );
-
-  const handleCopy = useCallback(
-    async (text: string, field: "base64" | "dataUri") => {
-      try {
-        await navigator.clipboard.writeText(text);
-        setCopiedField(field);
-        if (timerRef.current) clearTimeout(timerRef.current);
-        timerRef.current = setTimeout(() => setCopiedField(null), 2000);
-      } catch {
-        // Clipboard API unavailable
-      }
-    },
-    []
   );
 
   return (
@@ -156,10 +132,10 @@ export function FileDropZone({ urlSafe }: FileDropZoneProps) {
                 variant="ghost"
                 size="icon-xs"
                 className="absolute top-2 right-2"
-                onClick={() => handleCopy(base64, "base64")}
+                onClick={() => copy(base64)}
                 aria-label="Base64をコピー"
               >
-                {copiedField === "base64" ? (
+                {copiedValue === base64 ? (
                   <Check className="size-3" />
                 ) : (
                   <Copy className="size-3" />
@@ -178,10 +154,10 @@ export function FileDropZone({ urlSafe }: FileDropZoneProps) {
                 variant="ghost"
                 size="icon-xs"
                 className="absolute top-2 right-2"
-                onClick={() => handleCopy(dataUri, "dataUri")}
+                onClick={() => copy(dataUri)}
                 aria-label="Data URIをコピー"
               >
-                {copiedField === "dataUri" ? (
+                {copiedValue === dataUri ? (
                   <Check className="size-3" />
                 ) : (
                   <Copy className="size-3" />
