@@ -18,6 +18,15 @@
             "command": "if echo \"$TOOL_INPUT\" | grep -qE 'push\\s+(-f|--force)'; then echo 'BLOCK: force pushは禁止されています' >&2; exit 2; fi"
           }
         ]
+      },
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if echo \"$TOOL_INPUT\" | grep -q 'src/components/ui/'; then echo 'BLOCK: shadcn/uiコンポーネントは手動編集禁止です。npx shadcn@latest add で管理してください' >&2; exit 2; fi"
+          }
+        ]
       }
     ],
     "Notification": [
