@@ -1,1 +1,1 @@
-../../../../shared-claude-rules/rules/security.md
+../../../../shared-claude-code/rules/security.md
