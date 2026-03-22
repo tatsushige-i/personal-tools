@@ -9,6 +9,15 @@
             "command": "bash .claude/hooks/check-cross-feature-import.sh"
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if echo \"$TOOL_INPUT\" | grep -qE 'push\\s+(-f|--force)'; then echo 'BLOCK: force pushは禁止されています' >&2; exit 2; fi"
+          }
+        ]
       }
     ],
     "Notification": [
