@@ -1,8 +1,8 @@
 "use client";
 
 import { Copy, Check } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useClipboard } from "@/lib/use-clipboard";
 import type { ColorValue } from "../lib/types";
 
 type Props = {
@@ -10,28 +10,7 @@ type Props = {
 };
 
 export function ColorPreview({ color }: Props) {
-  const [copiedField, setCopiedField] = useState<string | null>(null);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
-  }, []);
-
-  const copyToClipboard = useCallback(
-    async (text: string, field: string) => {
-      try {
-        await navigator.clipboard.writeText(text);
-        setCopiedField(field);
-        if (timerRef.current) clearTimeout(timerRef.current);
-        timerRef.current = setTimeout(() => setCopiedField(null), 1500);
-      } catch {
-        // ignore clipboard errors
-      }
-    },
-    [],
-  );
+  const { copy, copiedValue } = useClipboard();
 
   const formats = [
     { label: "HEX", value: color.hex },
@@ -68,9 +47,9 @@ export function ColorPreview({ color }: Props) {
               size="icon"
               className="h-7 w-7"
               aria-label={`${label}をコピー`}
-              onClick={() => copyToClipboard(value, label)}
+              onClick={() => copy(value)}
             >
-              {copiedField === label ? (
+              {copiedValue === value ? (
                 <Check className="h-3.5 w-3.5" aria-hidden />
               ) : (
                 <Copy className="h-3.5 w-3.5" aria-hidden />
@@ -91,9 +70,9 @@ export function ColorPreview({ color }: Props) {
               size="icon"
               className="h-7 w-7"
               aria-label="Tailwindをコピー"
-              onClick={() => copyToClipboard(color.tailwind!, "tailwind")}
+              onClick={() => copy(color.tailwind!)}
             >
-              {copiedField === "tailwind" ? (
+              {copiedValue === color.tailwind ? (
                 <Check className="h-3.5 w-3.5" aria-hidden />
               ) : (
                 <Copy className="h-3.5 w-3.5" aria-hidden />

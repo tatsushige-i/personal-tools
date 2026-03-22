@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect } from "react";
 import { Check, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useClipboard } from "@/lib/use-clipboard";
 
 type CronTextInputProps = {
   value: string;
@@ -13,25 +13,7 @@ type CronTextInputProps = {
 };
 
 export function CronTextInput({ value, onChange, hasError }: CronTextInputProps) {
-  const [copied, setCopied] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
-  }, []);
-
-  const handleCopy = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(value);
-      setCopied(true);
-      if (timerRef.current) clearTimeout(timerRef.current);
-      timerRef.current = setTimeout(() => setCopied(false), 2000);
-    } catch {
-      // Clipboard API unavailable
-    }
-  }, [value]);
+  const { copy, isCopied } = useClipboard();
 
   return (
     <div className="space-y-2">
@@ -45,8 +27,8 @@ export function CronTextInput({ value, onChange, hasError }: CronTextInputProps)
           className={`font-mono text-lg ${hasError ? "border-destructive focus-visible:ring-destructive" : ""}`}
           aria-invalid={hasError}
         />
-        <Button variant="outline" size="icon" onClick={handleCopy} aria-label="コピー">
-          {copied ? (
+        <Button variant="outline" size="icon" onClick={() => copy(value)} aria-label="コピー">
+          {isCopied ? (
             <Check className="h-4 w-4" aria-hidden="true" />
           ) : (
             <Copy className="h-4 w-4" aria-hidden="true" />

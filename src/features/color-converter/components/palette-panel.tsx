@@ -1,8 +1,8 @@
 "use client";
 
 import { Plus, X, Copy, Check } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useClipboard } from "@/lib/use-clipboard";
 import type { ColorValue, PaletteEntry } from "../lib/types";
 
 type Props = {
@@ -18,26 +18,7 @@ export function PalettePanel({
   onRemove,
   onSelect,
 }: Props) {
-  const [copied, setCopied] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
-  }, []);
-
-  const copyAllHex = useCallback(async () => {
-    try {
-      const hexes = palette.map((e) => e.color.hex).join(", ");
-      await navigator.clipboard.writeText(hexes);
-      setCopied(true);
-      if (timerRef.current) clearTimeout(timerRef.current);
-      timerRef.current = setTimeout(() => setCopied(false), 1500);
-    } catch {
-      // ignore clipboard errors
-    }
-  }, [palette]);
+  const { copy, isCopied } = useClipboard();
 
   return (
     <div className="space-y-4">
@@ -45,8 +26,8 @@ export function PalettePanel({
         <h2 className="text-lg font-semibold">パレット</h2>
         <div className="flex gap-2">
           {palette.length > 0 && (
-            <Button variant="outline" size="sm" onClick={copyAllHex}>
-              {copied ? (
+            <Button variant="outline" size="sm" onClick={() => copy(palette.map((e) => e.color.hex).join(", "))}>
+              {isCopied ? (
                 <Check className="mr-1 h-3.5 w-3.5" aria-hidden />
               ) : (
                 <Copy className="mr-1 h-3.5 w-3.5" aria-hidden />

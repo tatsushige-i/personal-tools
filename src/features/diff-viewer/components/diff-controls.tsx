@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useCallback } from "react";
 import { Check, ClipboardCopy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,6 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useClipboard } from "@/lib/use-clipboard";
 import type { DiffMode, InputMode } from "@/features/diff-viewer/lib/types";
 
 type DiffControlsProps = {
@@ -29,22 +30,13 @@ export function DiffControls({
   onExport,
   canExport,
 }: DiffControlsProps) {
-  const [copied, setCopied] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { isCopied, markCopied } = useClipboard();
 
   const handleExport = useCallback(async () => {
     const success = await onExport();
     if (!success) return;
-    setCopied(true);
-    if (timerRef.current) clearTimeout(timerRef.current);
-    timerRef.current = setTimeout(() => setCopied(false), 2000);
-  }, [onExport]);
-
-  useEffect(() => {
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
-  }, []);
+    markCopied();
+  }, [onExport, markCopied]);
 
   return (
     <div className="flex flex-wrap items-center gap-2">
@@ -84,7 +76,7 @@ export function DiffControls({
         onClick={handleExport}
         aria-label="Unified diffをクリップボードにコピー"
       >
-        {copied ? (
+        {isCopied ? (
           <>
             <Check className="mr-1.5 size-4" />
             コピー済み
