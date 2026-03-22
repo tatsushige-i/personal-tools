@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Braces, Clock, FileText, Fingerprint, FileDiff, Languages, Palette, Package, type LucideIcon } from "lucide-react";
+import { ArrowRight, Braces, Clock, FileText, Fingerprint, FileDiff, Languages, Palette, Package, Type, type LucideIcon } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -62,6 +62,12 @@ const tools: Tool[] = [
     description: "テキスト・JSONの差分表示、行単位/単語単位のdiffモード、unified diffエクスポート",
     href: "/tools/diff-viewer",
     icon: FileDiff,
+  },
+  {
+    name: "Character Counter",
+    description: "文字数・単語数・行数・バイト数のリアルタイムカウント、プラットフォーム別残り文字数表示",
+    href: "/tools/character-counter",
+    icon: Type,
   },
 ];
 
