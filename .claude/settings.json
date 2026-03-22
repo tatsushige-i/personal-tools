@@ -27,6 +27,15 @@
             "command": "if echo \"$TOOL_INPUT\" | grep -q 'src/components/ui/'; then echo 'BLOCK: shadcn/uiコンポーネントは手動編集禁止です。npx shadcn@latest add で管理してください' >&2; exit 2; fi"
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if echo \"$TOOL_INPUT\" | grep -qE 'git\\s+add.*\\.env'; then echo 'BLOCK: .envファイルのステージングは禁止されています' >&2; exit 2; fi"
+          }
+        ]
       }
     ],
     "Notification": [
