@@ -1,1 +1,1 @@
-../../../../shared-claude-rules/rules/conventions.md
+../../../../shared-claude-code/rules/conventions.md
