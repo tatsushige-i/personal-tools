@@ -30,6 +30,21 @@ cp .env.local.example .env.local
 npm run dev
 ```
 
+## Claude Code セットアップ
+
+このプロジェクトは [shared-claude-code](https://github.com/tatsushige-i/shared-claude-code) から Claude Code の共有設定を同期して利用しています。
+
+同期対象:
+- **Rules** — 共有コーディング規約・ワークフロールール（`.claude/rules/shared/`）
+- **Skills** — 共有スラッシュコマンド（`.claude/skills/`）
+- **Hooks** — 共有自動化フック（`.claude/settings.json`）
+
+rules・skills・hooks を shared-claude-code から最新の状態に同期するには、以下を実行してください:
+
+```
+/config-claude-sync
+```
+
 ## ドキュメント
 
 - [アーキテクチャ](../../.claude/rules/architecture.md) — ディレクトリ構成、レイヤー分離、ルーティング

@@ -30,6 +30,21 @@ cp .env.local.example .env.local
 npm run dev
 ```
 
+## Claude Code Setup
+
+This project syncs shared Claude Code configuration from [shared-claude-code](https://github.com/tatsushige-i/shared-claude-code).
+
+Synced items:
+- **Rules** — shared coding/workflow rules (`.claude/rules/shared/`)
+- **Skills** — shared slash commands (`.claude/skills/`)
+- **Hooks** — shared automation hooks (`.claude/settings.json`)
+
+To sync the latest rules, skills, and hooks from shared-claude-code, run:
+
+```
+/config-claude-sync
+```
+
 ## Docs
 
 - [Architecture](.claude/rules/architecture.md) — Directory structure, layer separation, routing
