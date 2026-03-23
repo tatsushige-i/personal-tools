@@ -10,3 +10,4 @@ Custom slash commands for Claude Code, defined in `.claude/skills/`.
 - `/git-issue-start [issue-number]` — Fetches a GitHub Issue and creates a feature branch
 - `/git-pr-create [commit-message]` — Commits, pushes, and creates a PR
 - `/git-review-respond [pr-number]` — Handles PR review comments end-to-end
+- `/tech-debt-audit-nextjs` — Audit technical debt in Next.js (App Router) projects - analyze code against checklist and generate prioritized report
