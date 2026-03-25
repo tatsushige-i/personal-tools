@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useCallback } from "react";
 import { ArrowLeftRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,6 +13,7 @@ import {
 import type { ColorValue } from "../lib/types";
 import { calculateContrast } from "../lib/contrast";
 import { createColorValue } from "../lib/color-conversions";
+import { useHexInput } from "../lib/use-hex-input";
 
 type Props = {
   foreground: ColorValue;
@@ -21,32 +21,6 @@ type Props = {
   onForegroundChange: (color: ColorValue) => void;
   onBackgroundChange: (color: ColorValue) => void;
 };
-
-function useHexInput(
-  color: ColorValue,
-  onChange: (color: ColorValue) => void,
-) {
-  // null = not editing, string = user is typing
-  const [draft, setDraft] = useState<string | null>(null);
-
-  const displayText = draft ?? color.hex;
-
-  const handleChange = useCallback((value: string) => {
-    setDraft(value);
-  }, []);
-
-  const commit = useCallback(() => {
-    if (draft === null) return;
-    const cleaned = draft.startsWith("#") ? draft : `#${draft}`;
-    if (/^#[0-9a-fA-F]{6}$/.test(cleaned)) {
-      const cv = createColorValue(cleaned.toLowerCase());
-      if (cv) onChange(cv);
-    }
-    setDraft(null);
-  }, [draft, onChange]);
-
-  return { text: displayText, handleChange, commit };
-}
 
 export function ContrastChecker({
   foreground,
