@@ -4,8 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useClipboard } from "@/lib/use-clipboard";
 import { Check, Copy } from "lucide-react";
-import type { Mode } from "../lib/types";
-import type { Base64Result } from "../lib/types";
+import type { Mode, Base64Result } from "../lib/types";
 import { buildDataUri, detectImageMimeType } from "../lib/base64";
 
 type TextOutputProps = {
