@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Braces, Clock, FileText, Fingerprint, FileDiff, Languages, Palette, Package, Type, type LucideIcon } from "lucide-react";
+import { ArrowRight, Braces, Clock, FileText, Fingerprint, FileDiff, Languages, Palette, Package, Regex, Type, type LucideIcon } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -68,6 +68,12 @@ const tools: Tool[] = [
     description: "文字数・単語数・行数・バイト数のリアルタイムカウント、プラットフォーム別残り文字数表示",
     href: "/tools/character-counter",
     icon: Type,
+  },
+  {
+    name: "Regex Tester",
+    description: "正規表現のパターンマッチをリアルタイムで検証、キャプチャグループ表示、置換プレビュー",
+    href: "/tools/regex-tester",
+    icon: Regex,
   },
 ];
 
