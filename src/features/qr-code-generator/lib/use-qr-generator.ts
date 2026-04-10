@@ -8,6 +8,9 @@ import type {
 } from "./types";
 import { buildWifiString } from "./wifi-format";
 
+const ALLOWED_LOGO_TYPES = ["image/png", "image/jpeg", "image/webp"];
+const MAX_LOGO_SIZE = 2 * 1024 * 1024; // 2MB
+
 const DEFAULT_WIFI_CONFIG: WifiConfig = {
   ssid: "",
   password: "",
@@ -63,6 +66,12 @@ export function useQrGenerator() {
   );
 
   const handleLogoUpload = useCallback((file: File) => {
+    if (!ALLOWED_LOGO_TYPES.includes(file.type)) {
+      return;
+    }
+    if (file.size > MAX_LOGO_SIZE) {
+      return;
+    }
     const reader = new FileReader();
     reader.onload = (e) => {
       setLogoDataUrl(e.target?.result as string);

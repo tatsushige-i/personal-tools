@@ -13,7 +13,21 @@ export function QrPreview({ canvasRef, content, options }: QrPreviewProps) {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    renderQrToCanvas(canvas, content, options);
+    let cancelled = false;
+
+    void (async () => {
+      try {
+        await renderQrToCanvas(canvas, content, options);
+      } catch {
+        if (!cancelled) {
+          console.error("Failed to render QR code");
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
   }, [canvasRef, content, options]);
 
   return (

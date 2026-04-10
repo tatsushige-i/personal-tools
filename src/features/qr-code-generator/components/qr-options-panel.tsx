@@ -121,7 +121,7 @@ export function QrOptionsPanel({
         <input
           ref={fileInputRef}
           type="file"
-          accept="image/*"
+          accept="image/png,image/jpeg,image/webp"
           className="hidden"
           onChange={(e) => {
             const file = e.target.files?.[0];
@@ -139,7 +139,12 @@ export function QrOptionsPanel({
             <Button
               variant="outline"
               size="sm"
-              onClick={onLogoRemove}
+              onClick={() => {
+                onLogoRemove();
+                if (fileInputRef.current) {
+                  fileInputRef.current.value = "";
+                }
+              }}
             >
               <X className="mr-1 h-3 w-3" />
               削除
