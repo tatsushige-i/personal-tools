@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Braces, Clock, FileText, Fingerprint, FileDiff, Languages, Palette, Package, Regex, Type, type LucideIcon } from "lucide-react";
+import { ArrowRight, Braces, Clock, FileText, Fingerprint, FileDiff, Languages, Palette, Package, QrCode, Regex, Type, type LucideIcon } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -74,6 +74,12 @@ const tools: Tool[] = [
     description: "正規表現のパターンマッチをリアルタイムで検証、キャプチャグループ表示、置換プレビュー",
     href: "/tools/regex-tester",
     icon: Regex,
+  },
+  {
+    name: "QR Code Generator",
+    description: "URLやテキストからQRコード生成、サイズ・色・ロゴのカスタマイズ、PNG/SVGダウンロード",
+    href: "/tools/qr-code-generator",
+    icon: QrCode,
   },
 ];
 
