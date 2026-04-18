@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, ArrowLeftRight, Braces, Clock, FileText, Fingerprint, FileDiff, Languages, Palette, Package, QrCode, Regex, Type, type LucideIcon } from "lucide-react";
+import { ArrowRight, ArrowLeftRight, Braces, Calculator, Clock, FileText, Fingerprint, FileDiff, Languages, Palette, Package, QrCode, Regex, Type, type LucideIcon } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -86,6 +86,12 @@ const tools: Tool[] = [
     description: "長さ・重さ・温度など各種単位を変換、計算式の表示",
     href: "/tools/unit-converter",
     icon: ArrowLeftRight,
+  },
+  {
+    name: "Split Bill Calculator",
+    description: "割り勘計算、端数処理、傾斜配分、税・サービス料の別計算",
+    href: "/tools/split-bill-calculator",
+    icon: Calculator,
   },
 ];
 
