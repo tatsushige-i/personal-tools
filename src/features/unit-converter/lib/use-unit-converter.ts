@@ -45,10 +45,10 @@ export function useUnitConverter() {
   }, []);
 
   const handleSwap = useCallback(() => {
-    setFromUnitId(() => {
-      setToUnitId(fromUnitId);
-      return toUnitId;
-    });
+    const nextFromUnitId = toUnitId;
+    const nextToUnitId = fromUnitId;
+    setFromUnitId(nextFromUnitId);
+    setToUnitId(nextToUnitId);
     if (activeInput === "from") {
       setFromValue(displayToValue);
     } else {

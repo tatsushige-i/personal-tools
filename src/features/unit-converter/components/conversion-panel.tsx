@@ -23,6 +23,7 @@ function UnitSelector({ units, selectedId, onChange, label }: UnitSelectorProps)
     >
       {units.map((unit) => (
         <button
+          type="button"
           key={unit.id}
           role="radio"
           aria-checked={selectedId === unit.id}

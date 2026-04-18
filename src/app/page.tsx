@@ -83,7 +83,7 @@ const tools: Tool[] = [
   },
   {
     name: "Unit Converter",
-    description: "長さ・重さ・温度など各種単位を変換、料理用モード、計算式の表示",
+    description: "長さ・重さ・温度など各種単位を変換、計算式の表示",
     href: "/tools/unit-converter",
     icon: ArrowLeftRight,
   },

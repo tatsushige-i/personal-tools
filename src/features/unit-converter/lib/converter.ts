@@ -97,7 +97,7 @@ export function convert(
   const fromUnit = config.units.find((u) => u.id === fromUnitId);
   const toUnit = config.units.find((u) => u.id === toUnitId);
 
-  if (!fromUnit?.toBase || !toUnit?.toBase) {
+  if (!fromUnit || !toUnit || fromUnit.toBase == null || toUnit.toBase == null) {
     return { value: 0, formula: "" };
   }
 

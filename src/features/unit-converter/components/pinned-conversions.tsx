@@ -2,7 +2,6 @@
 
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import type { PinnedConversion } from "../lib/types";
 import { getUnit, getCategoryConfig } from "../lib/units";
 
@@ -31,13 +30,13 @@ export function PinnedConversions({
 
           return (
             <div key={pinned.id} className="flex items-center gap-1">
-              <Badge
-                variant="secondary"
-                className="cursor-pointer hover:bg-secondary/80 px-3 py-1"
+              <button
+                type="button"
                 onClick={() => onApply(pinned)}
+                className="inline-flex items-center rounded-full border border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80 px-3 py-1 text-xs font-semibold transition-colors"
               >
                 {config.label}: {fromUnit.symbol} → {toUnit.symbol}
-              </Badge>
+              </button>
               <Button
                 variant="ghost"
                 size="xs"
