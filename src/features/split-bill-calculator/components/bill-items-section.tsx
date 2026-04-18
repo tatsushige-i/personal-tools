@@ -34,12 +34,15 @@ export function BillItemsSection({ items, onAdd, onRemove, onUpdate }: Props) {
                 value={item.name}
                 onChange={(e) => onUpdate(item.id, "name", e.target.value)}
                 className="flex-1"
+                aria-label={`項目${index + 1}の名前`}
               />
             )}
             <div className="relative flex-1">
               <Input
                 type="number"
                 inputMode="numeric"
+                min={0}
+                step={1}
                 placeholder="0"
                 value={item.amount}
                 onChange={(e) => onUpdate(item.id, "amount", e.target.value)}
