@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Braces, Clock, FileText, Fingerprint, FileDiff, Languages, Palette, Package, QrCode, Regex, Type, type LucideIcon } from "lucide-react";
+import { ArrowRight, ArrowLeftRight, Braces, Clock, FileText, Fingerprint, FileDiff, Languages, Palette, Package, QrCode, Regex, Type, type LucideIcon } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -80,6 +80,12 @@ const tools: Tool[] = [
     description: "URLやテキストからQRコード生成、サイズ・色・ロゴのカスタマイズ、PNG/SVGダウンロード",
     href: "/tools/qr-code-generator",
     icon: QrCode,
+  },
+  {
+    name: "Unit Converter",
+    description: "長さ・重さ・温度など各種単位を変換、計算式の表示",
+    href: "/tools/unit-converter",
+    icon: ArrowLeftRight,
   },
 ];
 
