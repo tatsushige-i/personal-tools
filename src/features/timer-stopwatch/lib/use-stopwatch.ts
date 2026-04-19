@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import type { Stopwatch } from "./types";
 import {
   createStopwatch,
@@ -10,8 +10,6 @@ import {
   startStopwatch,
 } from "./stopwatch-engine";
 
-const TICK_INTERVAL_MS = 100;
-
 let nextLapId = 1;
 
 function generateLapId(): string {
@@ -20,15 +18,6 @@ function generateLapId(): string {
 
 export function useStopwatch() {
   const [stopwatch, setStopwatch] = useState<Stopwatch>(createStopwatch);
-  const [, setNow] = useState(0);
-
-  useEffect(() => {
-    if (stopwatch.status !== "running") return;
-    const handle = setInterval(() => {
-      setNow(Date.now());
-    }, TICK_INTERVAL_MS);
-    return () => clearInterval(handle);
-  }, [stopwatch.status]);
 
   const start = useCallback(() => {
     setStopwatch((prev) => startStopwatch(prev, Date.now()));

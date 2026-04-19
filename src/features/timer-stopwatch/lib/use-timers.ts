@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { Timer } from "./types";
 import {
   createTimer,
@@ -21,6 +21,11 @@ function generateId(): string {
 
 export function useTimers() {
   const [timers, setTimers] = useState<Timer[]>([]);
+  const timersRef = useRef(timers);
+
+  useEffect(() => {
+    timersRef.current = timers;
+  }, [timers]);
 
   const hasRunning = timers.some((t) => t.status === "running");
 
@@ -29,19 +34,20 @@ export function useTimers() {
 
     const handle = setInterval(() => {
       const now = Date.now();
+      const current = timersRef.current;
       const completedTitles: string[] = [];
-      setTimers((prev) => {
-        let changed = false;
-        const next = prev.map((t) => {
-          const { timer, justCompleted } = tickTimer(t, now);
-          if (justCompleted) {
-            completedTitles.push(timer.title);
-          }
-          if (timer !== t) changed = true;
-          return timer;
-        });
-        return changed ? next : prev;
+      let changed = false;
+      const next = current.map((t) => {
+        const { timer, justCompleted } = tickTimer(t, now);
+        if (justCompleted) {
+          completedTitles.push(timer.title);
+        }
+        if (timer !== t) changed = true;
+        return timer;
       });
+      if (changed) {
+        setTimers(next);
+      }
       completedTitles.forEach((title) => notifyTimerDone(title));
     }, TICK_INTERVAL_MS);
 
