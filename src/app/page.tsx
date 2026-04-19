@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, ArrowLeftRight, Braces, Calculator, Clock, FileText, Fingerprint, FileDiff, Languages, Palette, Package, QrCode, Regex, Type, type LucideIcon } from "lucide-react";
+import { ArrowRight, ArrowLeftRight, Braces, Calculator, Clock, FileText, Fingerprint, FileDiff, Languages, Palette, Package, QrCode, Regex, Timer, Type, type LucideIcon } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -92,6 +92,12 @@ const tools: Tool[] = [
     description: "割り勘計算、端数処理、傾斜配分、税・サービス料の別計算",
     href: "/tools/split-bill-calculator",
     icon: Calculator,
+  },
+  {
+    name: "Timer / Stopwatch",
+    description: "カウントダウンタイマー・ストップウォッチ、プリセット・複数同時実行・ブラウザ通知",
+    href: "/tools/timer-stopwatch",
+    icon: Timer,
   },
 ];
 
