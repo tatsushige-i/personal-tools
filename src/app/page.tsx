@@ -7,15 +7,15 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 
-type ToolCategory = "text" | "encode-convert" | "generator" | "dev-support" | "calc-time";
-
-const CATEGORIES: { id: ToolCategory; label: string }[] = [
+const CATEGORIES = [
   { id: "text", label: "テキスト" },
   { id: "encode-convert", label: "エンコード / 変換" },
   { id: "generator", label: "ジェネレーター" },
   { id: "dev-support", label: "開発支援" },
   { id: "calc-time", label: "計算 / 時間" },
-];
+] as const;
+
+type ToolCategory = (typeof CATEGORIES)[number]["id"];
 
 type Tool = {
   name: string;

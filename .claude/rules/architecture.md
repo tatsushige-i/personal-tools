@@ -33,7 +33,7 @@ Strictly separate routing, UI, and logic into three layers:
 
 1. Create `src/features/<tool-name>/components/` and `src/features/<tool-name>/lib/`
 2. Create `src/app/tools/<tool-name>/page.tsx` and import from the feature
-3. Add a tool entry to the `tools` array in `src/app/page.tsx` with a `category` value selected from the `ToolCategory` union type. **Do not force-fit a tool into an existing category when none is genuinely appropriate.** If no existing category fits, propose adding a new category to the user and wait for confirmation before proceeding. Adding a new category requires updating both the `ToolCategory` union and the `CATEGORIES` array in `src/app/page.tsx`.
+3. Add a tool entry to the `tools` array in `src/app/page.tsx` with a `category` value selected from the `ToolCategory` union type. **Do not force-fit a tool into an existing category when none is genuinely appropriate.** If no existing category fits, propose adding a new category to the user and wait for confirmation before proceeding. Adding a new category requires only adding an entry to the `CATEGORIES` array in `src/app/page.tsx` — `ToolCategory` is derived from `CATEGORIES`, so it updates automatically.
 
 ### Scaffold Template
 
