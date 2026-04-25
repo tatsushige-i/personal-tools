@@ -33,7 +33,7 @@ Strictly separate routing, UI, and logic into three layers:
 
 1. Create `src/features/<tool-name>/components/` and `src/features/<tool-name>/lib/`
 2. Create `src/app/tools/<tool-name>/page.tsx` and import from the feature
-3. Add a tool entry to the `tools` array in `src/app/page.tsx`
+3. Add a tool entry to the `tools` array in `src/app/page.tsx` with a `category` value selected from the `ToolCategory` union type. **Do not force-fit a tool into an existing category when none is genuinely appropriate.** If no existing category fits, propose adding a new category to the user and wait for confirmation before proceeding. Adding a new category requires only adding an entry to the `CATEGORIES` array in `src/app/page.tsx` — `ToolCategory` is derived from `CATEGORIES`, so it updates automatically.
 
 ### Scaffold Template
 
@@ -76,6 +76,7 @@ export function <ToolName>Page() {
   description: "TODO: Tool description",
   href: "/tools/<tool>",
   icon: Package,
+  category: "<category-id>", // one of the ToolCategory union values
 },
 ```
-Note: The `Package` icon requires an import from `lucide-react`. Add the import if not already present.
+Note: The `Package` icon requires an import from `lucide-react`. Add the import if not already present. The `category` field is required — TypeScript will error if it is missing or uses a value outside the `ToolCategory` union.
