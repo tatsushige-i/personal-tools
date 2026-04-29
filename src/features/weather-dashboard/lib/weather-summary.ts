@@ -66,15 +66,42 @@ export function describeWeatherCode(code: number): string {
   return WEATHER_CODE_LABELS[code] ?? "不明";
 }
 
+export type WeatherIconCategory =
+  | "sun"
+  | "cloudSun"
+  | "cloud"
+  | "fog"
+  | "drizzle"
+  | "rain"
+  | "snow"
+  | "lightning"
+  | "hail";
+
+export function weatherIconCategory(code: number): WeatherIconCategory {
+  if (code === 0 || code === 1) return "sun";
+  if (code === 2) return "cloudSun";
+  if (code === 3) return "cloud";
+  if (code === 45 || code === 48) return "fog";
+  if (code >= 51 && code <= 57) return "drizzle";
+  if ((code >= 61 && code <= 67) || (code >= 80 && code <= 82)) return "rain";
+  if ((code >= 71 && code <= 77) || code === 85 || code === 86) return "snow";
+  if (code === 95) return "lightning";
+  if (code === 96 || code === 99) return "hail";
+  return "cloud";
+}
+
+const ICON_BY_CATEGORY: Record<WeatherIconCategory, LucideIcon> = {
+  sun: Sun,
+  cloudSun: CloudSun,
+  cloud: Cloud,
+  fog: CloudFog,
+  drizzle: CloudDrizzle,
+  rain: CloudRain,
+  snow: CloudSnow,
+  lightning: CloudLightning,
+  hail: CloudHail,
+};
+
 export function getWeatherIcon(code: number): LucideIcon {
-  if (code === 0 || code === 1) return Sun;
-  if (code === 2) return CloudSun;
-  if (code === 3) return Cloud;
-  if (code === 45 || code === 48) return CloudFog;
-  if (code >= 51 && code <= 57) return CloudDrizzle;
-  if ((code >= 61 && code <= 67) || (code >= 80 && code <= 82)) return CloudRain;
-  if ((code >= 71 && code <= 77) || code === 85 || code === 86) return CloudSnow;
-  if (code === 95) return CloudLightning;
-  if (code === 96 || code === 99) return CloudHail;
-  return Cloud;
+  return ICON_BY_CATEGORY[weatherIconCategory(code)];
 }

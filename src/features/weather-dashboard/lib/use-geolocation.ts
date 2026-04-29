@@ -35,6 +35,32 @@ function initialState(autoRequest: boolean): GeolocationState {
     : { status: "idle", coords: null, errorMessage: null };
 }
 
+function fetchGeolocation(
+  setState: (next: GeolocationState) => void
+): void {
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      setState({
+        status: "granted",
+        coords: {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        },
+        errorMessage: null,
+      });
+    },
+    (err) => {
+      const denied = err.code === err.PERMISSION_DENIED;
+      setState({
+        status: denied ? "denied" : "error",
+        coords: null,
+        errorMessage: err.message,
+      });
+    },
+    POSITION_OPTIONS
+  );
+}
+
 export function useGeolocation(autoRequest = true): GeolocationState & {
   request: () => void;
 } {
@@ -48,52 +74,12 @@ export function useGeolocation(autoRequest = true): GeolocationState & {
       return;
     }
     setState({ status: "loading", coords: null, errorMessage: null });
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setState({
-          status: "granted",
-          coords: {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          },
-          errorMessage: null,
-        });
-      },
-      (err) => {
-        const denied = err.code === err.PERMISSION_DENIED;
-        setState({
-          status: denied ? "denied" : "error",
-          coords: null,
-          errorMessage: err.message,
-        });
-      },
-      POSITION_OPTIONS
-    );
+    fetchGeolocation(setState);
   }, []);
 
   useEffect(() => {
     if (!autoRequest || !isSupported()) return;
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setState({
-          status: "granted",
-          coords: {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          },
-          errorMessage: null,
-        });
-      },
-      (err) => {
-        const denied = err.code === err.PERMISSION_DENIED;
-        setState({
-          status: denied ? "denied" : "error",
-          coords: null,
-          errorMessage: err.message,
-        });
-      },
-      POSITION_OPTIONS
-    );
+    fetchGeolocation(setState);
   }, [autoRequest]);
 
   return { ...state, request };

@@ -47,6 +47,7 @@ export function WeatherDashboardPage() {
   const [manualLocation, setManualLocation] = useState<Location | null>(null);
   const [forecastResult, setForecastResult] = useState<ForecastResult | null>(null);
   const [errorResult, setErrorResult] = useState<ErrorResult | null>(null);
+  const [refetchToken, setRefetchToken] = useState(0);
 
   const location: Location | null = useMemo(() => {
     if (manualLocation) return manualLocation;
@@ -60,7 +61,9 @@ export function WeatherDashboardPage() {
     return null;
   }, [manualLocation, geo.status, geo.coords]);
 
-  const currentKey = location ? locationKeyOf(location) : null;
+  const currentKey = location
+    ? `${locationKeyOf(location)}#${refetchToken}`
+    : null;
   const forecast =
     forecastResult && currentKey === forecastResult.locationKey
       ? forecastResult.forecast
@@ -74,7 +77,7 @@ export function WeatherDashboardPage() {
   useEffect(() => {
     if (!location) return;
     let cancelled = false;
-    const key = locationKeyOf(location);
+    const key = `${locationKeyOf(location)}#${refetchToken}`;
     fetchForecast(location.latitude, location.longitude)
       .then((data) => {
         if (cancelled) return;
@@ -97,7 +100,7 @@ export function WeatherDashboardPage() {
     return () => {
       cancelled = true;
     };
-  }, [location]);
+  }, [location, refetchToken]);
 
   const handleSelectCity = useCallback((result: GeocodingResult) => {
     const subtitle = [result.admin1, result.country].filter(Boolean).join(", ");
@@ -106,10 +109,12 @@ export function WeatherDashboardPage() {
       longitude: result.longitude,
       label: subtitle ? `${result.name}（${subtitle}）` : result.name,
     });
+    setRefetchToken((token) => token + 1);
   }, []);
 
   const handleUseCurrentLocation = useCallback(() => {
     setManualLocation(null);
+    setRefetchToken((token) => token + 1);
     geo.request();
   }, [geo]);
 

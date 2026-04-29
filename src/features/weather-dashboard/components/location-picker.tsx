@@ -30,8 +30,10 @@ export function LocationPicker({
   useEffect(() => {
     const trimmed = query.trim();
     if (trimmed.length === 0) {
+      requestIdRef.current += 1;
       setResults([]);
       setErrorMessage(null);
+      setSearching(false);
       return;
     }
     const requestId = requestIdRef.current + 1;

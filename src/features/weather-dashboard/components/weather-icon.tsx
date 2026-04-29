@@ -9,6 +9,7 @@ import {
   CloudSun,
   Sun,
 } from "lucide-react";
+import { weatherIconCategory } from "../lib/weather-summary";
 
 type Props = {
   code: number;
@@ -20,20 +21,24 @@ export function WeatherIcon({ code, className, label }: Props) {
   const ariaProps = label
     ? { "aria-label": label, role: "img" as const }
     : { "aria-hidden": true as const };
-
-  if (code === 0 || code === 1) return <Sun className={className} {...ariaProps} />;
-  if (code === 2) return <CloudSun className={className} {...ariaProps} />;
-  if (code === 3) return <Cloud className={className} {...ariaProps} />;
-  if (code === 45 || code === 48)
-    return <CloudFog className={className} {...ariaProps} />;
-  if (code >= 51 && code <= 57)
-    return <CloudDrizzle className={className} {...ariaProps} />;
-  if ((code >= 61 && code <= 67) || (code >= 80 && code <= 82))
-    return <CloudRain className={className} {...ariaProps} />;
-  if ((code >= 71 && code <= 77) || code === 85 || code === 86)
-    return <CloudSnow className={className} {...ariaProps} />;
-  if (code === 95) return <CloudLightning className={className} {...ariaProps} />;
-  if (code === 96 || code === 99)
-    return <CloudHail className={className} {...ariaProps} />;
-  return <Cloud className={className} {...ariaProps} />;
+  switch (weatherIconCategory(code)) {
+    case "sun":
+      return <Sun className={className} {...ariaProps} />;
+    case "cloudSun":
+      return <CloudSun className={className} {...ariaProps} />;
+    case "cloud":
+      return <Cloud className={className} {...ariaProps} />;
+    case "fog":
+      return <CloudFog className={className} {...ariaProps} />;
+    case "drizzle":
+      return <CloudDrizzle className={className} {...ariaProps} />;
+    case "rain":
+      return <CloudRain className={className} {...ariaProps} />;
+    case "snow":
+      return <CloudSnow className={className} {...ariaProps} />;
+    case "lightning":
+      return <CloudLightning className={className} {...ariaProps} />;
+    case "hail":
+      return <CloudHail className={className} {...ariaProps} />;
+  }
 }

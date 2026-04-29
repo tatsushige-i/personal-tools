@@ -11,11 +11,15 @@ const WEEKDAY_FORMATTER = new Intl.DateTimeFormat("ja-JP", {
   month: "numeric",
   day: "numeric",
   weekday: "short",
+  timeZone: "UTC",
 });
 
 function formatDate(isoDate: string): string {
-  const d = new Date(`${isoDate}T00:00:00`);
-  return Number.isNaN(d.getTime()) ? isoDate : WEEKDAY_FORMATTER.format(d);
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(isoDate);
+  if (!match) return isoDate;
+  const [, y, m, d] = match;
+  const date = new Date(Date.UTC(Number(y), Number(m) - 1, Number(d)));
+  return Number.isNaN(date.getTime()) ? isoDate : WEEKDAY_FORMATTER.format(date);
 }
 
 const ROW_GRID =
@@ -43,7 +47,6 @@ export function DailyForecastList({ daily }: Props) {
               <WeatherIcon
                 code={day.weatherCode}
                 className="h-5 w-5 text-muted-foreground"
-                label={describeWeatherCode(day.weatherCode)}
               />
               <span className="text-muted-foreground">
                 {describeWeatherCode(day.weatherCode)}
