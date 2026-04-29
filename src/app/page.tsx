@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, ArrowLeftRight, Braces, Calculator, Clock, FileText, Fingerprint, FileDiff, Languages, Palette, Package, QrCode, Regex, Timer, Type, type LucideIcon } from "lucide-react";
+import { ArrowRight, ArrowLeftRight, Braces, Calculator, Clock, Cloud, FileText, Fingerprint, FileDiff, Languages, Palette, Package, QrCode, Regex, Timer, Type, type LucideIcon } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -13,6 +13,7 @@ const CATEGORIES = [
   { id: "generator", label: "ジェネレーター" },
   { id: "dev-support", label: "開発支援" },
   { id: "calc-time", label: "計算 / 時間" },
+  { id: "external-api", label: "外部API活用" },
 ] as const;
 
 type ToolCategory = (typeof CATEGORIES)[number]["id"];
@@ -123,6 +124,13 @@ const tools: Tool[] = [
     href: "/tools/timer-stopwatch",
     icon: Timer,
     category: "calc-time",
+  },
+  {
+    name: "Weather Dashboard",
+    description: "現在地または都市名検索で現在の天気・時間別気温・週間予報を表示",
+    href: "/tools/weather-dashboard",
+    icon: Cloud,
+    category: "external-api",
   },
 ];
 
