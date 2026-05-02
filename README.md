@@ -8,11 +8,7 @@ A collection of personal utility tools built with Next.js.
 
 ## Tools
 
-| Tool | Description | Path |
-|------|-------------|------|
-| UUID Generator | Generate UUID v4/v7 and ULID with bulk generation and clipboard copy | `/tools/uuid-generator` |
-| Text Rewriter | Rewrite text with tone conversion, translation, summarization, and proofreading (powered by Gemini) | `/tools/text-rewriter` |
-| JSON Formatter | Format, minify, validate JSON with tree view and path filter | `/tools/json-formatter` |
+A list of all available tools is shown on the top page after running `npm run dev`. The source for each tool lives under `src/app/tools/`, and the registry is the `tools` array in [`src/app/page.tsx`](src/app/page.tsx).
 
 ## Tech Stack
 

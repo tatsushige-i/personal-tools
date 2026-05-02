@@ -8,11 +8,7 @@
 
 ## ツール
 
-| ツール | 説明 | パス |
-|--------|------|------|
-| UUID Generator | UUID v4/v7とULIDを生成。一括生成とクリップボードコピーに対応 | `/tools/uuid-generator` |
-| Text Rewriter | トーン変換・翻訳・要約・校正によるテキスト書き換え（Gemini搭載） | `/tools/text-rewriter` |
-| JSON Formatter | JSONのフォーマット・圧縮・検証。ツリービューとパスフィルター付き | `/tools/json-formatter` |
+`npm run dev` 後、トップページにすべてのツール一覧が表示されます。各ツールのソースは `src/app/tools/` 配下、登録は [`src/app/page.tsx`](../../src/app/page.tsx) の `tools` 配列で管理されています。
 
 ## 技術スタック
 
