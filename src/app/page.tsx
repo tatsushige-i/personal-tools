@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, ArrowLeftRight, Braces, Calculator, Clock, Cloud, Coins, FileText, Fingerprint, FileDiff, Languages, Palette, Package, QrCode, Regex, Timer, Type, type LucideIcon } from "lucide-react";
+import { ArrowRight, ArrowLeftRight, Braces, Calculator, Clock, Cloud, Coins, FileText, Fingerprint, FileDiff, Github, Languages, Palette, Package, QrCode, Regex, Timer, Type, type LucideIcon } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -137,6 +137,13 @@ const tools: Tool[] = [
     description: "ECB公表の日次為替レートで通貨変換、お気に入り通貨ペア・30日推移グラフ",
     href: "/tools/exchange-rate-calculator",
     icon: Coins,
+    category: "external-api",
+  },
+  {
+    name: "GitHub Repo Analyzer",
+    description: "GitHubユーザーの公開リポジトリ一覧と統計を可視化",
+    href: "/tools/github-repo-analyzer",
+    icon: Github,
     category: "external-api",
   },
 ];
