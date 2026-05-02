@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, ArrowLeftRight, Braces, Calculator, Clock, Cloud, FileText, Fingerprint, FileDiff, Languages, Palette, Package, QrCode, Regex, Timer, Type, type LucideIcon } from "lucide-react";
+import { ArrowRight, ArrowLeftRight, Braces, Calculator, Clock, Cloud, Coins, FileText, Fingerprint, FileDiff, Languages, Palette, Package, QrCode, Regex, Timer, Type, type LucideIcon } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -130,6 +130,13 @@ const tools: Tool[] = [
     description: "現在地または都市名検索で現在の天気・時間別気温・週間予報を表示",
     href: "/tools/weather-dashboard",
     icon: Cloud,
+    category: "external-api",
+  },
+  {
+    name: "Exchange Rate Calculator",
+    description: "ECB公表の日次為替レートで通貨変換、お気に入り通貨ペア・30日推移グラフ",
+    href: "/tools/exchange-rate-calculator",
+    icon: Coins,
     category: "external-api",
   },
 ];
