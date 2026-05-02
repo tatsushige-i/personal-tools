@@ -18,7 +18,7 @@ export function formatRelativeDate(
 ): string {
   const target = Date.parse(isoDate);
   if (!Number.isFinite(target)) return isoDate;
-  const diffMs = now.getTime() - target;
+  const diffMs = Math.max(0, now.getTime() - target);
   const diffSeconds = Math.floor(diffMs / 1000);
 
   if (diffSeconds < 60) return "数秒前";
