@@ -26,7 +26,7 @@ export function HeadersTable({ headers }: Props) {
       <CardHeader>
         <CardTitle className="text-lg">HTTPヘッダー</CardTitle>
         <p className="text-sm text-muted-foreground">
-          このページへのリクエストでブラウザが送信した主要ヘッダー一覧です。
+          IP情報取得APIへのリクエスト時にブラウザが送信した主要ヘッダー一覧です。
         </p>
       </CardHeader>
       <CardContent>

@@ -7,7 +7,7 @@ const IPAPI_BASE = "https://ipapi.co";
 const USER_AGENT = "personal-tools";
 
 const IPV4_PATTERN = /^(?:(?:25[0-5]|2[0-4]\d|[01]?\d?\d)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d?\d)$/;
-const IPV6_PATTERN = /^[0-9a-fA-F:]+$/;
+const IPV6_HEXTET_PATTERN = /^[0-9a-fA-F]{1,4}$/;
 
 const ALLOWED_HEADERS = [
   "user-agent",
@@ -134,7 +134,24 @@ async function fetchUpstream(
 }
 
 function isValidIp(value: string): boolean {
-  return IPV4_PATTERN.test(value) || (value.includes(":") && IPV6_PATTERN.test(value));
+  if (IPV4_PATTERN.test(value)) return true;
+  if (!value.includes(":")) return false;
+  return isValidIpv6(value);
+}
+
+function isValidIpv6(value: string): boolean {
+  const dcParts = value.split("::");
+  if (dcParts.length > 2) return false;
+
+  if (dcParts.length === 2) {
+    const left = dcParts[0] === "" ? [] : dcParts[0].split(":");
+    const right = dcParts[1] === "" ? [] : dcParts[1].split(":");
+    if (left.length + right.length > 7) return false;
+    return [...left, ...right].every((g) => IPV6_HEXTET_PATTERN.test(g));
+  }
+
+  const groups = value.split(":");
+  return groups.length === 8 && groups.every((g) => IPV6_HEXTET_PATTERN.test(g));
 }
 
 function isReservedIp(value: string): boolean {
@@ -145,6 +162,7 @@ function isReservedIp(value: string): boolean {
   if (parts.length !== 4 || parts.some((n) => Number.isNaN(n))) return false;
   const [a, b] = parts;
   if (a === 10 || a === 127) return true;
+  if (a === 100 && b >= 64 && b <= 127) return true;
   if (a === 172 && b >= 16 && b <= 31) return true;
   if (a === 192 && b === 168) return true;
   if (a === 169 && b === 254) return true;

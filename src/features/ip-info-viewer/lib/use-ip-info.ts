@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { IpInfoError, fetchLookup, fetchSelfInfo } from "./ip-info-client";
 import type {
   ApiErrorCode,
@@ -33,6 +33,7 @@ export function useIpInfo() {
   const [selfError, setSelfError] = useState<ErrorState | null>(null);
   const [selfLoading, setSelfLoading] = useState(true);
   const [lookupState, setLookupState] = useState<LookupState>({ status: "idle" });
+  const lookupRequestIdRef = useRef(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -58,12 +59,16 @@ export function useIpInfo() {
   const lookup = useCallback((ip: string) => {
     const trimmed = ip.trim();
     if (!trimmed) return;
+    const requestId = lookupRequestIdRef.current + 1;
+    lookupRequestIdRef.current = requestId;
     setLookupState({ status: "loading", ip: trimmed });
     fetchLookup(trimmed)
       .then(({ geo }) => {
+        if (lookupRequestIdRef.current !== requestId) return;
         setLookupState({ status: "success", ip: trimmed, data: geo });
       })
       .catch((e: unknown) => {
+        if (lookupRequestIdRef.current !== requestId) return;
         setLookupState({
           status: "error",
           ip: trimmed,
