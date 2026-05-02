@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, ArrowLeftRight, Braces, Calculator, Clock, Cloud, Coins, FileText, Fingerprint, FileDiff, Github, Languages, Palette, Package, QrCode, Regex, Timer, Type, type LucideIcon } from "lucide-react";
+import { ArrowRight, ArrowLeftRight, Braces, Calculator, Clock, Cloud, Coins, FileText, Fingerprint, FileDiff, Github, Globe, Languages, Palette, Package, QrCode, Regex, Timer, Type, type LucideIcon } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -144,6 +144,13 @@ const tools: Tool[] = [
     description: "GitHubユーザーの公開リポジトリ一覧と統計を可視化",
     href: "/tools/github-repo-analyzer",
     icon: Github,
+    category: "external-api",
+  },
+  {
+    name: "IP Info Viewer",
+    description: "自分のグローバルIPとジオロケーション、ISP・タイムゾーンなどを表示",
+    href: "/tools/ip-info-viewer",
+    icon: Globe,
     category: "external-api",
   },
 ];
