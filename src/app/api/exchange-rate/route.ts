@@ -165,7 +165,21 @@ async function fetchUpstream(url: URL, failureMessage: string): Promise<Upstream
   }
 
   if (!upstream.ok) {
-    if (upstream.status >= 400 && upstream.status < 500) {
+    if (upstream.status === 429) {
+      return {
+        ok: false,
+        errorResponse: NextResponse.json(
+          {
+            error: "為替レートサービスのレート制限に達しました。しばらく経ってから再度お試しください。",
+            errorCode: "RATE_LIMITED",
+          },
+          { status: 429 }
+        ),
+      };
+    }
+    if (upstream.status === 404 || upstream.status === 422) {
+      // Frankfurter は不明な通貨コードや不正な日付に対して 404/422 を返す。
+      // クライアント側で形式検証は済んでいるので、上流が「データが存在しない」と判断したものとして扱う。
       const body = await upstream.json().catch(() => null);
       const message =
         typeof body === "object" && body !== null && "message" in body

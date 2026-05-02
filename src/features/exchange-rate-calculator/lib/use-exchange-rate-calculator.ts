@@ -89,6 +89,7 @@ export function useExchangeRateCalculator() {
       .then((data) => {
         if (cancelled) return;
         setRatesResult({ data, key: ratesKey });
+        setRatesError(null);
       })
       .catch((e: unknown) => {
         if (cancelled) return;
@@ -111,6 +112,7 @@ export function useExchangeRateCalculator() {
       .then((data) => {
         if (cancelled) return;
         setHistoryResult({ data, key: historyKey });
+        setHistoryError(null);
       })
       .catch((e: unknown) => {
         if (cancelled) return;
