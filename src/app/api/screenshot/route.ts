@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { chromium, type Browser } from "playwright";
+import { chromium, type Browser, type BrowserContext } from "playwright";
 import sharp from "sharp";
 import { createRateLimit } from "@/lib/rate-limit";
 import { getClientIp, rateLimitResponse } from "@/lib/api-helpers";
@@ -111,15 +111,15 @@ async function captureShot(
   scale: Scale,
 ): Promise<ShotOrError> {
   const preset = DEVICE_PRESETS[device];
-  const context = await browser.newContext({
-    viewport: { width: preset.width, height: preset.height },
-    deviceScaleFactor: scale,
-    isMobile: preset.isMobile,
-    userAgent: preset.userAgent,
-  });
-  const page = await context.newPage();
-
+  let context: BrowserContext | undefined;
   try {
+    context = await browser.newContext({
+      viewport: { width: preset.width, height: preset.height },
+      deviceScaleFactor: scale,
+      isMobile: preset.isMobile,
+      userAgent: preset.userAgent,
+    });
+    const page = await context.newPage();
     await page.goto(url, { waitUntil: "load", timeout: NAVIGATION_TIMEOUT_MS });
     const png = await page.screenshot({ type: "png", fullPage });
     const buffer = format === "webp" ? await sharp(png).webp({ quality: 90 }).toBuffer() : png;
@@ -144,7 +144,7 @@ async function captureShot(
       },
     };
   } finally {
-    await context.close().catch(() => {});
+    if (context) await context.close().catch(() => {});
   }
 }
 

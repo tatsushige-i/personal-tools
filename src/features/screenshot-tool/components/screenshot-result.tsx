@@ -7,13 +7,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   DEVICE_LABELS,
+  type Device,
   type ScreenshotShot,
 } from "@/features/screenshot-tool/lib/types";
 
 type Props = {
   shots: ScreenshotShot[];
   isLoading: boolean;
-  loadingDevices: string[];
+  loadingDevices: Device[];
   hostname?: string;
 };
 
@@ -24,7 +25,7 @@ export function ScreenshotResult({ shots, isLoading, loadingDevices, hostname }:
         {loadingDevices.map((device) => (
           <Card key={device}>
             <CardHeader>
-              <CardTitle className="text-base">{DEVICE_LABELS[device as keyof typeof DEVICE_LABELS] ?? device}</CardTitle>
+              <CardTitle className="text-base">{DEVICE_LABELS[device]}</CardTitle>
             </CardHeader>
             <CardContent>
               <Skeleton className="h-64 w-full" />
