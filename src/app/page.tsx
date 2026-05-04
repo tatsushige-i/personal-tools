@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, ArrowLeftRight, Braces, Calculator, Camera, Clock, Cloud, Coins, FileText, Fingerprint, FileDiff, Github, Globe, Languages, Palette, Package, QrCode, Regex, ScanSearch, Send, Timer, Type, type LucideIcon } from "lucide-react";
+import { ArrowRight, ArrowLeftRight, Braces, Calculator, Camera, Clock, Cloud, Coins, FileText, Fingerprint, FileDiff, Gauge, Github, Globe, Languages, Palette, Package, QrCode, Regex, ScanSearch, Send, Timer, Type, type LucideIcon } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -173,6 +173,13 @@ const tools: Tool[] = [
     description: "URLからOGP/Twitter Card/メタ情報を抽出し、Twitter・Slack風プレビューとSEOチェックを表示",
     href: "/tools/ogp-preview",
     icon: ScanSearch,
+    category: "playwright",
+  },
+  {
+    name: "ページパフォーマンスチェッカー",
+    description: "URLからWeb Vitals相当（LCP/CLS/FCP/TBT）・読み込みタイミング・リソース一覧を計測し、デスクトップ/モバイルで比較",
+    href: "/tools/page-performance-checker",
+    icon: Gauge,
     category: "playwright",
   },
 ];
