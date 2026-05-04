@@ -50,7 +50,6 @@ export function calculateOverallScore(metrics: CoreMetrics): number {
     weightedSum += scoreMetric(value, good, poor) * weight;
     totalWeight += weight;
   }
-  if (totalWeight === 0) return 0;
   return Math.round(weightedSum / totalWeight);
 }
 

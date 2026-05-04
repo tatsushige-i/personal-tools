@@ -56,7 +56,7 @@ describe("calculateOverallScore", () => {
     expect(score).toBe(100);
   });
 
-  it("returns 0 when all metrics are null", () => {
+  it("returns 0 when nullable metrics are all null and TBT is poor", () => {
     const score = calculateOverallScore({ lcp: null, cls: null, fcp: null, tbt: 600 });
     expect(score).toBe(0);
   });
