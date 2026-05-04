@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, ArrowLeftRight, Braces, Calculator, Camera, Clock, Cloud, Coins, FileText, Fingerprint, FileDiff, Gauge, Github, Globe, Languages, Palette, Package, QrCode, Regex, ScanSearch, Send, Timer, Type, type LucideIcon } from "lucide-react";
+import { ArrowRight, ArrowLeftRight, Braces, Calculator, Camera, Clock, Cloud, Coins, FileText, Fingerprint, FileDiff, Gauge, Github, Globe, Languages, Link2Off, Palette, Package, QrCode, Regex, ScanSearch, Send, Timer, Type, type LucideIcon } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -180,6 +180,13 @@ const tools: Tool[] = [
     description: "URLからWeb Vitals相当（LCP/CLS/FCP/TBT）・読み込みタイミング・リソース一覧を計測し、デスクトップ/モバイルで比較",
     href: "/tools/page-performance-checker",
     icon: Gauge,
+    category: "playwright",
+  },
+  {
+    name: "リンク切れチェッカー",
+    description: "URLを入力するとPlaywrightでページ内の全リンクをクロールし、404/500/リダイレクト等のステータスと内部/外部分類を一覧化、CSVエクスポート対応",
+    href: "/tools/broken-link-checker",
+    icon: Link2Off,
     category: "playwright",
   },
 ];
