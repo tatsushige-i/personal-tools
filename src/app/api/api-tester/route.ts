@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createRateLimit } from "@/lib/rate-limit";
 import { getClientIp, rateLimitResponse } from "@/lib/api-helpers";
-import { validateRequestUrl } from "@/features/api-tester/lib/url-validator";
+import { validateRequestUrl } from "@/lib/url-validator";
 import { HTTP_METHODS, type HttpMethod } from "@/features/api-tester/lib/types";
 
 const rateLimit = createRateLimit({ limit: 30, windowMs: 60_000 });

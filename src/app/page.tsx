@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, ArrowLeftRight, Braces, Calculator, Clock, Cloud, Coins, FileText, Fingerprint, FileDiff, Github, Globe, Languages, Palette, Package, QrCode, Regex, Send, Timer, Type, type LucideIcon } from "lucide-react";
+import { ArrowRight, ArrowLeftRight, Braces, Calculator, Camera, Clock, Cloud, Coins, FileText, Fingerprint, FileDiff, Github, Globe, Languages, Palette, Package, QrCode, Regex, Send, Timer, Type, type LucideIcon } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -14,6 +14,7 @@ const CATEGORIES = [
   { id: "dev-support", label: "開発支援" },
   { id: "calc-time", label: "計算 / 時間" },
   { id: "external-api", label: "外部API活用" },
+  { id: "playwright", label: "Playwright活用" },
 ] as const;
 
 type ToolCategory = (typeof CATEGORIES)[number]["id"];
@@ -159,6 +160,13 @@ const tools: Tool[] = [
     href: "/tools/api-tester",
     icon: Send,
     category: "external-api",
+  },
+  {
+    name: "Screenshot Tool",
+    description: "URLを入力するとPlaywrightでデスクトップ/タブレット/モバイルの3サイズを撮影、PNG・WebPでダウンロード",
+    href: "/tools/screenshot-tool",
+    icon: Camera,
+    category: "playwright",
   },
 ];
 
