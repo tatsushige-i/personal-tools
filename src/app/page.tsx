@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, ArrowLeftRight, Braces, Calculator, Clock, Cloud, Coins, FileText, Fingerprint, FileDiff, Github, Globe, Languages, Palette, Package, QrCode, Regex, Timer, Type, type LucideIcon } from "lucide-react";
+import { ArrowRight, ArrowLeftRight, Braces, Calculator, Clock, Cloud, Coins, FileText, Fingerprint, FileDiff, Github, Globe, Languages, Palette, Package, QrCode, Regex, Send, Timer, Type, type LucideIcon } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -151,6 +151,13 @@ const tools: Tool[] = [
     description: "自分のグローバルIPとジオロケーション、ISP・タイムゾーンなどを表示",
     href: "/tools/ip-info-viewer",
     icon: Globe,
+    category: "external-api",
+  },
+  {
+    name: "API Tester",
+    description: "REST API へリクエストを送信、レスポンスを整形表示・cURLエクスポート、セッション履歴",
+    href: "/tools/api-tester",
+    icon: Send,
     category: "external-api",
   },
 ];
