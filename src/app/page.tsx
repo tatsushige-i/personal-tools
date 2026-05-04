@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, ArrowLeftRight, Braces, Calculator, Camera, Clock, Cloud, Coins, FileText, Fingerprint, FileDiff, Github, Globe, Languages, Palette, Package, QrCode, Regex, Send, Timer, Type, type LucideIcon } from "lucide-react";
+import { ArrowRight, ArrowLeftRight, Braces, Calculator, Camera, Clock, Cloud, Coins, FileText, Fingerprint, FileDiff, Github, Globe, Languages, Palette, Package, QrCode, Regex, ScanSearch, Send, Timer, Type, type LucideIcon } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -166,6 +166,13 @@ const tools: Tool[] = [
     description: "URLを入力するとPlaywrightでデスクトップ/タブレット/モバイルの3サイズを撮影、PNG・WebPでダウンロード",
     href: "/tools/screenshot-tool",
     icon: Camera,
+    category: "playwright",
+  },
+  {
+    name: "OGP Meta Preview",
+    description: "URLからOGP/Twitter Card/メタ情報を抽出し、Twitter・Slack風プレビューとSEOチェックを表示",
+    href: "/tools/ogp-preview",
+    icon: ScanSearch,
     category: "playwright",
   },
 ];
