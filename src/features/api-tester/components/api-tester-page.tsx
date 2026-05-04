@@ -105,10 +105,8 @@ export function ApiTesterPage() {
     setBody(record.body);
     setResponse(record.response);
     setError(record.error);
-    const queryless = record.url.includes("?")
-      ? record.url.slice(0, record.url.indexOf("?"))
-      : record.url;
-    setUrlBase(queryless);
+    const parsed = paramsFromUrl(record.url);
+    setUrlBase(parsed?.base ?? record.url);
   }, []);
 
   const handleClearHistory = useCallback(() => {

@@ -40,39 +40,42 @@ export function KeyValueEditor({
         <p className="text-sm text-muted-foreground">{emptyLabel}</p>
       ) : (
         <div className="space-y-2">
-          {rows.map((row) => (
-            <div key={row.id} className="flex items-center gap-2">
-              <Switch
-                size="sm"
-                checked={row.enabled}
-                onCheckedChange={(enabled) => updateRow(row.id, { enabled })}
-                aria-label="この項目を有効にする"
-              />
-              <Input
-                value={row.key}
-                onChange={(e) => updateRow(row.id, { key: e.target.value })}
-                placeholder={keyPlaceholder}
-                className="flex-1 font-mono"
-                aria-label="key"
-              />
-              <Input
-                value={row.value}
-                onChange={(e) => updateRow(row.id, { value: e.target.value })}
-                placeholder={valuePlaceholder}
-                className="flex-1 font-mono"
-                aria-label="value"
-              />
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon-sm"
-                onClick={() => removeRow(row.id)}
-                aria-label="この行を削除"
-              >
-                <Trash2 className="size-4" />
-              </Button>
-            </div>
-          ))}
+          {rows.map((row, index) => {
+            const rowNumber = index + 1;
+            return (
+              <div key={row.id} className="flex items-center gap-2">
+                <Switch
+                  size="sm"
+                  checked={row.enabled}
+                  onCheckedChange={(enabled) => updateRow(row.id, { enabled })}
+                  aria-label={`${rowNumber}行目を有効にする`}
+                />
+                <Input
+                  value={row.key}
+                  onChange={(e) => updateRow(row.id, { key: e.target.value })}
+                  placeholder={keyPlaceholder}
+                  className="flex-1 font-mono"
+                  aria-label={`${rowNumber}行目 ${keyPlaceholder}`}
+                />
+                <Input
+                  value={row.value}
+                  onChange={(e) => updateRow(row.id, { value: e.target.value })}
+                  placeholder={valuePlaceholder}
+                  className="flex-1 font-mono"
+                  aria-label={`${rowNumber}行目 ${valuePlaceholder}`}
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={() => removeRow(row.id)}
+                  aria-label={`${rowNumber}行目を削除`}
+                >
+                  <Trash2 className="size-4" />
+                </Button>
+              </div>
+            );
+          })}
         </div>
       )}
       <Button type="button" variant="outline" size="sm" onClick={addRow}>
