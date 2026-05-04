@@ -164,7 +164,10 @@ function buildResponse(input: {
   for (const m of raw.metas) {
     const key = m.property ?? m.name;
     if (!key) continue;
-    const tag: MetaTag = { key, content: m.content };
+    const content = URL_VALUE_KEYS.has(key)
+      ? resolveUrl(m.content, raw.baseUrl)
+      : m.content;
+    const tag: MetaTag = { key, content };
     if (key.startsWith("og:")) {
       ogTags.push(tag);
     } else if (key.startsWith("twitter:")) {
@@ -203,6 +206,32 @@ function buildResponse(input: {
     jsonLd,
     durationMs,
   };
+}
+
+const URL_VALUE_KEYS = new Set([
+  "og:url",
+  "og:image",
+  "og:image:url",
+  "og:image:secure_url",
+  "og:video",
+  "og:video:url",
+  "og:video:secure_url",
+  "og:audio",
+  "og:audio:url",
+  "og:audio:secure_url",
+  "twitter:url",
+  "twitter:image",
+  "twitter:image:src",
+  "twitter:player",
+]);
+
+function resolveUrl(content: string, baseUrl: string): string {
+  if (!content) return content;
+  try {
+    return new URL(content, baseUrl).toString();
+  } catch {
+    return content;
+  }
 }
 
 function defaultFavicon(pageUrl: string): string | null {

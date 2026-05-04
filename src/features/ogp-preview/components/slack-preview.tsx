@@ -10,16 +10,16 @@ type Props = {
 
 export function SlackPreview({ data }: Props) {
   const siteName =
-    findTag(data.ogTags, "og:site_name") ??
-    findTag(data.generalTags, "application-name") ??
+    findTag(data.ogTags, "og:site_name") ||
+    findTag(data.generalTags, "application-name") ||
     safeHostname(data.finalUrl);
   const title =
-    findTag(data.ogTags, "og:title") ?? data.title ?? "(タイトルなし)";
+    findTag(data.ogTags, "og:title") || data.title || "(タイトルなし)";
   const description =
-    findTag(data.ogTags, "og:description") ??
-    findTag(data.generalTags, "description") ??
+    findTag(data.ogTags, "og:description") ||
+    findTag(data.generalTags, "description") ||
     "";
-  const image = findTag(data.ogTags, "og:image") ?? null;
+  const image = findTag(data.ogTags, "og:image") || null;
 
   return (
     <div className="rounded-md border-l-4 border-muted-foreground/40 bg-muted/30 px-3 py-2">

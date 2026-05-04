@@ -13,17 +13,17 @@ export function TwitterCardPreview({ data }: Props) {
   const isLarge = cardType === "summary_large_image";
 
   const title =
-    findTag(data.twitterTags, "twitter:title") ??
-    findTag(data.ogTags, "og:title") ??
-    data.title ??
+    findTag(data.twitterTags, "twitter:title") ||
+    findTag(data.ogTags, "og:title") ||
+    data.title ||
     "(タイトルなし)";
   const description =
-    findTag(data.twitterTags, "twitter:description") ??
-    findTag(data.ogTags, "og:description") ??
+    findTag(data.twitterTags, "twitter:description") ||
+    findTag(data.ogTags, "og:description") ||
     "";
   const image =
-    findTag(data.twitterTags, "twitter:image") ??
-    findTag(data.ogTags, "og:image") ??
+    findTag(data.twitterTags, "twitter:image") ||
+    findTag(data.ogTags, "og:image") ||
     null;
   const site = findTag(data.twitterTags, "twitter:site");
 
