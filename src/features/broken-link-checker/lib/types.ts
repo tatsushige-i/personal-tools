@@ -13,6 +13,7 @@ export const LINK_STATUSES = [
   "server-error",
   "network-error",
   "timeout",
+  "blocked",
 ] as const;
 export type LinkStatus = (typeof LINK_STATUSES)[number];
 
@@ -23,6 +24,7 @@ export const LINK_STATUS_LABELS: Record<LinkStatus, string> = {
   "server-error": "サーバーエラー",
   "network-error": "到達不能",
   timeout: "タイムアウト",
+  blocked: "ブロック",
 };
 
 export type LinkResult = {
@@ -71,5 +73,11 @@ export function classifyStatus(statusCode: number): LinkStatus {
 }
 
 export function isErrorStatus(status: LinkStatus): boolean {
-  return status === "client-error" || status === "server-error" || status === "network-error" || status === "timeout";
+  return (
+    status === "client-error" ||
+    status === "server-error" ||
+    status === "network-error" ||
+    status === "timeout" ||
+    status === "blocked"
+  );
 }

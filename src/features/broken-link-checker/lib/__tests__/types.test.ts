@@ -48,11 +48,12 @@ describe("classifyStatus", () => {
 });
 
 describe("isErrorStatus", () => {
-  it("flags client/server/network/timeout as errors", () => {
+  it("flags client/server/network/timeout/blocked as errors", () => {
     expect(isErrorStatus("client-error")).toBe(true);
     expect(isErrorStatus("server-error")).toBe(true);
     expect(isErrorStatus("network-error")).toBe(true);
     expect(isErrorStatus("timeout")).toBe(true);
+    expect(isErrorStatus("blocked")).toBe(true);
   });
 
   it("does not flag ok/redirect as errors", () => {

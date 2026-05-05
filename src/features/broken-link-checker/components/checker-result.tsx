@@ -29,6 +29,7 @@ const STATUS_BADGE_VARIANT: Record<LinkStatus, "secondary" | "outline" | "destru
   "server-error": "destructive",
   "network-error": "destructive",
   timeout: "destructive",
+  blocked: "destructive",
 };
 
 const STATUS_BADGE_CLASS: Partial<Record<LinkStatus, string>> = {

@@ -236,6 +236,21 @@ async function checkLinks(
 
 async function checkOne(request: APIRequestContext, link: DiscoveredLink): Promise<LinkResult> {
   const start = performance.now();
+
+  // SSRF guard: discovered hrefs are untrusted. Refuse to fetch URLs that point at
+  // localhost / private / link-local addresses (e.g. cloud metadata endpoints).
+  const validation = validateRequestUrl(link.url);
+  if (!validation.ok) {
+    return {
+      url: link.url,
+      statusCode: null,
+      status: "blocked",
+      isInternal: link.isInternal,
+      durationMs: 0,
+      sourcePage: link.sourcePage,
+    };
+  }
+
   const headOutcome = await tryRequest(request, link.url, "head");
   let outcome = headOutcome;
 
