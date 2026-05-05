@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, ArrowLeftRight, Braces, Calculator, Camera, Clock, Cloud, Coins, FileText, Fingerprint, FileDiff, Gauge, Github, Globe, Languages, Link2Off, Palette, Package, QrCode, Regex, ScanSearch, Send, Timer, Type, type LucideIcon } from "lucide-react";
+import { ArrowRight, ArrowLeftRight, Braces, Calculator, Camera, Clock, Cloud, Coins, FileText, Fingerprint, FileDiff, Gauge, Github, Globe, Languages, Link2Off, MousePointerClick, Palette, Package, QrCode, Regex, ScanSearch, Send, Timer, Type, type LucideIcon } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -187,6 +187,13 @@ const tools: Tool[] = [
     description: "URLを入力するとPlaywrightでページ内の全リンクをクロールし、404/500/リダイレクト等のステータスと内部/外部分類を一覧化、CSVエクスポート対応",
     href: "/tools/broken-link-checker",
     icon: Link2Off,
+    category: "playwright",
+  },
+  {
+    name: "Webスクレイピングツール",
+    description: "URLとCSSセレクタを指定してPlaywrightでWebページから要素を抽出、テキスト/属性をテーブル表示しJSON/CSVエクスポート",
+    href: "/tools/web-scraper",
+    icon: MousePointerClick,
     category: "playwright",
   },
 ];
