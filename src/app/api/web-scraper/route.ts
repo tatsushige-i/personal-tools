@@ -73,6 +73,17 @@ export async function POST(request: Request) {
     const page = await context.newPage();
     await page.goto(targetUrl, { waitUntil: "load", timeout: NAVIGATION_TIMEOUT_MS });
 
+    // SSRF guard against redirects: the initial URL passed validation, but `page.goto`
+    // follows redirects that may land on a private/loopback host. Re-validate the final URL.
+    const finalValidation = validateRequestUrl(page.url());
+    if (!finalValidation.ok) {
+      return errorResponse(
+        400,
+        finalValidation.errorCode.toUpperCase(),
+        "リダイレクト先がローカル/プライベートネットワークのため、抽出を中止しました。",
+      );
+    }
+
     const results: SelectorResult[] = [];
     for (const sel of selectors.value) {
       results.push(await extractForSelector(page, sel));
@@ -132,17 +143,22 @@ async function extractForSelector(
   sel: ScraperSelectorInput,
 ): Promise<SelectorResult> {
   try {
-    const all = (await page.$$eval(sel.selector, (els) =>
-      els.map((el) => ({
-        text: (el.textContent ?? "").trim(),
-        html: el.innerHTML,
-        href: el instanceof HTMLAnchorElement ? el.href : undefined,
-        src: el instanceof HTMLImageElement ? el.src : undefined,
-      })),
+    // Truncate inside the browser so at most MAX + 1 elements cross the IPC boundary.
+    // The +1 is a sentinel that lets us flag `truncated` without serializing every match.
+    const limited = (await page.$$eval(
+      sel.selector,
+      (els, max) =>
+        els.slice(0, max + 1).map((el) => ({
+          text: (el.textContent ?? "").trim(),
+          html: el.innerHTML,
+          href: el instanceof HTMLAnchorElement ? el.href : undefined,
+          src: el instanceof HTMLImageElement ? el.src : undefined,
+        })),
+      MAX_MATCHES_PER_SELECTOR,
     )) as ScrapedElement[];
 
-    const truncated = all.length > MAX_MATCHES_PER_SELECTOR;
-    const matches = truncated ? all.slice(0, MAX_MATCHES_PER_SELECTOR) : all;
+    const truncated = limited.length > MAX_MATCHES_PER_SELECTOR;
+    const matches = truncated ? limited.slice(0, MAX_MATCHES_PER_SELECTOR) : limited;
     return { name: sel.name, selector: sel.selector, matches, truncated };
   } catch (e) {
     const message = e instanceof Error ? e.message : String(e);
