@@ -1,5 +1,6 @@
 import type {
   ApiErrorCode,
+  ContributionCalendar,
   RepoStats,
   RepoSummary,
   SortKey,
@@ -50,4 +51,14 @@ export function fetchRepoStats(
     repo,
   });
   return request<RepoStats>(`/api/github?${params.toString()}`);
+}
+
+export function fetchContributionCalendar(
+  username: string
+): Promise<ContributionCalendar> {
+  const params = new URLSearchParams({
+    mode: "contributions",
+    username,
+  });
+  return request<ContributionCalendar>(`/api/github?${params.toString()}`);
 }
