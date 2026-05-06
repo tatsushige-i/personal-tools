@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, type FormEvent, type KeyboardEvent } from "react";
 import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,11 +14,22 @@ type Props = {
 export function UsernameSearchForm({ onSubmit, initialValue = "" }: Props) {
   const [value, setValue] = useState(initialValue);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const submit = () => {
     const trimmed = value.trim();
     if (!trimmed) return;
     onSubmit(trimmed);
+  };
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    submit();
+  };
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key !== "Enter") return;
+    if (e.nativeEvent.isComposing) return;
+    e.preventDefault();
+    submit();
   };
 
   return (
@@ -33,6 +44,7 @@ export function UsernameSearchForm({ onSubmit, initialValue = "" }: Props) {
           type="text"
           value={value}
           onChange={(e) => setValue(e.target.value)}
+          onKeyDown={handleKeyDown}
           placeholder="例: facebook"
           autoComplete="off"
           spellCheck={false}

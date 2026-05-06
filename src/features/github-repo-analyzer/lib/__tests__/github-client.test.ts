@@ -1,5 +1,6 @@
 import {
   GithubApiError,
+  fetchContributionCalendar,
   fetchRepoStats,
   fetchUserRepos,
 } from "../github-client";
@@ -143,6 +144,96 @@ describe("fetchRepoStats", () => {
     });
 
     const error = await fetchRepoStats("facebook", "nope").catch(
+      (e: unknown) => e
+    );
+    expect(error).toBeInstanceOf(GithubApiError);
+    expect((error as GithubApiError).errorCode).toBe("NOT_FOUND");
+  });
+});
+
+describe("fetchContributionCalendar", () => {
+  const originalFetch = global.fetch;
+
+  afterEach(() => {
+    global.fetch = originalFetch;
+  });
+
+  it("returns calendar on success", async () => {
+    const payload = {
+      totalContributions: 1234,
+      weeks: [
+        {
+          days: [
+            { date: "2025-05-05", count: 0, level: 0 },
+            { date: "2025-05-06", count: 5, level: 2 },
+          ],
+        },
+      ],
+    };
+    const fetchMock = jest.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve(payload),
+    });
+    global.fetch = fetchMock;
+
+    const result = await fetchContributionCalendar("octocat");
+    expect(result).toEqual(payload);
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining("mode=contributions")
+    );
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining("username=octocat")
+    );
+  });
+
+  it("propagates NO_AUTH_TOKEN errorCode when token is unset", async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: false,
+      status: 503,
+      json: () =>
+        Promise.resolve({
+          error: "GITHUB_TOKEN が設定されていません。",
+          errorCode: "NO_AUTH_TOKEN",
+        }),
+    });
+
+    const error = await fetchContributionCalendar("octocat").catch(
+      (e: unknown) => e
+    );
+    expect(error).toBeInstanceOf(GithubApiError);
+    expect((error as GithubApiError).errorCode).toBe("NO_AUTH_TOKEN");
+  });
+
+  it("propagates INVALID_TOKEN errorCode on 401", async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: false,
+      status: 401,
+      json: () =>
+        Promise.resolve({
+          error: "GITHUB_TOKEN が無効です。",
+          errorCode: "INVALID_TOKEN",
+        }),
+    });
+
+    const error = await fetchContributionCalendar("octocat").catch(
+      (e: unknown) => e
+    );
+    expect(error).toBeInstanceOf(GithubApiError);
+    expect((error as GithubApiError).errorCode).toBe("INVALID_TOKEN");
+  });
+
+  it("propagates NOT_FOUND errorCode for unknown user", async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: false,
+      status: 404,
+      json: () =>
+        Promise.resolve({
+          error: "指定されたユーザーが見つかりませんでした。",
+          errorCode: "NOT_FOUND",
+        }),
+    });
+
+    const error = await fetchContributionCalendar("nope-such-user").catch(
       (e: unknown) => e
     );
     expect(error).toBeInstanceOf(GithubApiError);

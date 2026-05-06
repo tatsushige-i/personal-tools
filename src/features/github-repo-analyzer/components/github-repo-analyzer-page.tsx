@@ -5,6 +5,7 @@ import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useGithubRepos } from "../lib/use-github-repos";
 import type { RepoSummary, SortKey } from "../lib/types";
+import { ContributionHeatmap } from "./contribution-heatmap";
 import { RepoDetailPanel } from "./repo-detail-panel";
 import { RepoList } from "./repo-list";
 import { UsernameSearchForm } from "./username-search-form";
@@ -33,6 +34,8 @@ export function GithubRepoAnalyzerPage() {
       </div>
 
       <UsernameSearchForm onSubmit={handleSubmit} />
+
+      {username && <ContributionHeatmap username={username} />}
 
       {error && (
         <Alert variant="destructive" role="alert">

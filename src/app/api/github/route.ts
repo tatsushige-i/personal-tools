@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { createRateLimit } from "@/lib/rate-limit";
 import { getClientIp, rateLimitResponse } from "@/lib/api-helpers";
 import type {
+  ContributionCalendar,
+  ContributionLevel,
   LanguageBreakdown,
   RepoStats,
   RepoSummary,
@@ -35,8 +37,11 @@ export async function GET(request: Request) {
   if (mode === "repo-stats") {
     return handleRepoStats(searchParams);
   }
+  if (mode === "contributions") {
+    return handleContributions(searchParams);
+  }
   return validationError(
-    "mode は repos / repo-stats のいずれかを指定してください。"
+    "mode は repos / repo-stats / contributions のいずれかを指定してください。"
   );
 }
 
@@ -247,4 +252,158 @@ type GithubRepoResponse = {
 
 type GithubSearchResponse = {
   total_count?: number;
+};
+
+const CONTRIBUTIONS_QUERY = `query($login: String!) {
+  user(login: $login) {
+    contributionsCollection {
+      contributionCalendar {
+        totalContributions
+        weeks {
+          contributionDays {
+            date
+            contributionCount
+            contributionLevel
+          }
+        }
+      }
+    }
+  }
+}`;
+
+async function handleContributions(params: URLSearchParams): Promise<Response> {
+  const username = params.get("username") ?? "";
+  if (!USERNAME_PATTERN.test(username)) {
+    return validationError(
+      "username は1〜39文字の英数字とハイフンで指定してください。"
+    );
+  }
+
+  const token = process.env.GITHUB_TOKEN;
+  if (!token) {
+    return NextResponse.json(
+      {
+        error:
+          "GITHUB_TOKEN が設定されていません。.env.local に設定してください。",
+        errorCode: "NO_AUTH_TOKEN",
+      },
+      { status: 503 }
+    );
+  }
+
+  let upstream: Response;
+  try {
+    upstream = await fetch(`${GITHUB_API_BASE}/graphql`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+        "User-Agent": USER_AGENT,
+      },
+      body: JSON.stringify({
+        query: CONTRIBUTIONS_QUERY,
+        variables: { login: username },
+      }),
+    });
+  } catch {
+    return NextResponse.json(
+      {
+        error: "GitHub に接続できませんでした。",
+        errorCode: "UPSTREAM_ERROR",
+      },
+      { status: 502 }
+    );
+  }
+
+  if (upstream.status === 401) {
+    return NextResponse.json(
+      {
+        error:
+          "GITHUB_TOKEN が無効です。.env.local に有効なトークンを設定してください。",
+        errorCode: "INVALID_TOKEN",
+      },
+      { status: 401 }
+    );
+  }
+  if (!upstream.ok) {
+    return NextResponse.json(
+      {
+        error: "コントリビューション情報の取得に失敗しました。",
+        errorCode: "UPSTREAM_ERROR",
+      },
+      { status: 502 }
+    );
+  }
+
+  const payload = (await upstream.json()) as GraphQLContributionsResponse;
+
+  const notFound = payload.errors?.some((e) => e.type === "NOT_FOUND");
+  if (notFound || !payload.data?.user) {
+    return NextResponse.json(
+      {
+        error: "指定されたユーザーが見つかりませんでした。",
+        errorCode: "NOT_FOUND",
+      },
+      { status: 404 }
+    );
+  }
+
+  if (payload.errors && payload.errors.length > 0) {
+    return NextResponse.json(
+      {
+        error: "コントリビューション情報の取得に失敗しました。",
+        errorCode: "UPSTREAM_ERROR",
+      },
+      { status: 502 }
+    );
+  }
+
+  const calendar =
+    payload.data.user.contributionsCollection.contributionCalendar;
+  const result: ContributionCalendar = {
+    totalContributions: calendar.totalContributions,
+    weeks: calendar.weeks.map((w) => ({
+      days: w.contributionDays.map((d) => ({
+        date: d.date,
+        count: d.contributionCount,
+        level: toContributionLevel(d.contributionLevel),
+      })),
+    })),
+  };
+  return NextResponse.json(result);
+}
+
+function toContributionLevel(level: string): ContributionLevel {
+  switch (level) {
+    case "FIRST_QUARTILE":
+      return 1;
+    case "SECOND_QUARTILE":
+      return 2;
+    case "THIRD_QUARTILE":
+      return 3;
+    case "FOURTH_QUARTILE":
+      return 4;
+    default:
+      return 0;
+  }
+}
+
+type GraphQLContributionsResponse = {
+  data?: {
+    user: {
+      contributionsCollection: {
+        contributionCalendar: {
+          totalContributions: number;
+          weeks: {
+            contributionDays: {
+              date: string;
+              contributionCount: number;
+              contributionLevel: string;
+            }[];
+          }[];
+        };
+      };
+    } | null;
+  };
+  errors?: { type?: string; message?: string }[];
 };

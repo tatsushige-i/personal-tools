@@ -26,6 +26,11 @@ cp .env.local.example .env.local
 npm run dev
 ```
 
+### Environment Variables
+
+- `GEMINI_API_KEY` — required for **Text Rewriter**. Get one at https://aistudio.google.com/apikey.
+- `GITHUB_TOKEN` — optional, enables the contribution heatmap in **GitHub Repo Analyzer**. Create a classic Personal Access Token with the `read:user` scope at https://github.com/settings/tokens. If unset, the heatmap is shown as disabled and other features still work.
+
 ## Claude Code Setup
 
 This project syncs shared Claude Code configuration from [shared-claude-code](https://github.com/tatsushige-i/shared-claude-code).

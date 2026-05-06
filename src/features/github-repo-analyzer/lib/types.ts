@@ -3,7 +3,26 @@ export type ApiErrorCode =
   | "RATE_LIMITED"
   | "NOT_FOUND"
   | "UPSTREAM_ERROR"
-  | "SERVER_ERROR";
+  | "SERVER_ERROR"
+  | "NO_AUTH_TOKEN"
+  | "INVALID_TOKEN";
+
+export type ContributionLevel = 0 | 1 | 2 | 3 | 4;
+
+export type ContributionDay = {
+  date: string;
+  count: number;
+  level: ContributionLevel;
+};
+
+export type ContributionWeek = {
+  days: ContributionDay[];
+};
+
+export type ContributionCalendar = {
+  totalContributions: number;
+  weeks: ContributionWeek[];
+};
 
 export type RepoSummary = {
   id: number;
