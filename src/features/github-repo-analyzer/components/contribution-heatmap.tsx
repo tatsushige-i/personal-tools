@@ -209,7 +209,7 @@ function computeMonthLabels(
   calendar.weeks.forEach((week, weekIndex) => {
     const firstDay = week.days[0];
     if (!firstDay) return;
-    const month = new Date(firstDay.date).getMonth();
+    const month = new Date(firstDay.date).getUTCMonth();
     if (month !== lastMonth) {
       lastMonth = month;
       labels.push({ weekIndex, label: `${month + 1}月` });

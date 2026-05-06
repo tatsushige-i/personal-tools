@@ -325,6 +325,19 @@ async function handleContributions(params: URLSearchParams): Promise<Response> {
       { status: 401 }
     );
   }
+  if (
+    upstream.status === 403 &&
+    upstream.headers.get("X-RateLimit-Remaining") === "0"
+  ) {
+    return NextResponse.json(
+      {
+        error:
+          "GitHub API のレート制限に達しました。しばらく経ってから再度お試しください。",
+        errorCode: "RATE_LIMITED",
+      },
+      { status: 429 }
+    );
+  }
   if (!upstream.ok) {
     return NextResponse.json(
       {
