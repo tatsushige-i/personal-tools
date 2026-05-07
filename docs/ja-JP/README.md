@@ -28,7 +28,7 @@ npm run dev
 
 ### 環境変数
 
-- `GEMINI_API_KEY` — **Text Rewriter** で必須。https://aistudio.google.com/apikey で取得。
+- `GEMINI_API_KEY` — **Text Rewriter** と **JSON Formatter** (AI 変換) で必須。https://aistudio.google.com/apikey で取得。
 - `GITHUB_TOKEN` — 任意。**GitHub Repo Analyzer** のコントリビューションヒートマップを有効化します。https://github.com/settings/tokens で classic Personal Access Token を `read:user` スコープのみで発行してください。未設定時はヒートマップのみグレーアウトされ、その他の機能はそのまま動作します。
 
 ## Claude Code セットアップ
