@@ -28,7 +28,7 @@ npm run dev
 
 ### Environment Variables
 
-- `GEMINI_API_KEY` — required for **Text Rewriter**. Get one at https://aistudio.google.com/apikey.
+- `GEMINI_API_KEY` — required for **Text Rewriter** and **JSON Formatter** (AI conversion). Get one at https://aistudio.google.com/apikey.
 - `GITHUB_TOKEN` — optional, enables the contribution heatmap in **GitHub Repo Analyzer**. Create a classic Personal Access Token with the `read:user` scope at https://github.com/settings/tokens. If unset, the heatmap is shown as disabled and other features still work.
 
 ## Claude Code Setup
