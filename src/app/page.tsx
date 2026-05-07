@@ -44,7 +44,7 @@ const tools: Tool[] = [
   },
   {
     name: "JSON Formatter",
-    description: "JSONの整形・検証",
+    description: "JSONの整形・検証・AI変換",
     href: "/tools/json-formatter",
     icon: Braces,
     category: "encode-convert",
