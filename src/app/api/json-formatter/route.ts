@@ -5,7 +5,7 @@ import {
   MAX_JSON_LENGTH,
   SYSTEM_INSTRUCTION,
 } from "@/features/json-formatter/lib/json-transform-client";
-import { sanitizeInput, containsAttackPattern, buildSystemPrompt, validateOutput } from "@/lib/ai";
+import { containsAttackPattern, buildSystemPrompt, validateOutput } from "@/lib/ai";
 import { createRateLimit } from "@/lib/rate-limit";
 import { getClientIp, rateLimitResponse } from "@/lib/api-helpers";
 
@@ -70,13 +70,29 @@ export async function POST(request: Request) {
     );
   }
 
-  const validation = sanitizeInput(instruction, { maxLength: MAX_INSTRUCTION_LENGTH });
-  if (!validation.valid) {
-    const errorCode = containsAttackPattern(instruction)
-      ? "PROMPT_INJECTION_DETECTED"
-      : "VALIDATION_ERROR";
+  if (instruction.trim().length === 0) {
     return NextResponse.json(
-      { error: validation.error, errorCode },
+      { error: "変換指示を入力してください。", errorCode: "VALIDATION_ERROR" },
+      { status: 400 }
+    );
+  }
+
+  if (instruction.length > MAX_INSTRUCTION_LENGTH) {
+    return NextResponse.json(
+      {
+        error: `変換指示は${MAX_INSTRUCTION_LENGTH}文字以内で入力してください。（現在: ${instruction.length}文字）`,
+        errorCode: "VALIDATION_ERROR",
+      },
+      { status: 400 }
+    );
+  }
+
+  if (containsAttackPattern(instruction)) {
+    return NextResponse.json(
+      {
+        error: "入力内容に処理できないパターンが含まれています。内容を修正してください。",
+        errorCode: "PROMPT_INJECTION_DETECTED",
+      },
       { status: 400 }
     );
   }
