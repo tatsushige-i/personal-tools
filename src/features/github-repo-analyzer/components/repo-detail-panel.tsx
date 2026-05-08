@@ -10,10 +10,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { formatCount } from "../lib/format";
+import { formatCloseDuration, formatCount } from "../lib/format";
+import { useCloseTimeStats } from "../lib/use-close-time-stats";
 import { useRepoStats } from "../lib/use-repo-stats";
 import { LanguageBreakdown } from "./language-breakdown";
-import type { RepoSummary } from "../lib/types";
+import type { CloseTimeMetric, RepoSummary } from "../lib/types";
 
 type Props = {
   repo: RepoSummary;
@@ -22,6 +23,11 @@ type Props = {
 export function RepoDetailPanel({ repo }: Props) {
   const [owner, name] = repo.fullName.split("/");
   const { stats, error, loading } = useRepoStats(owner, name);
+  const {
+    stats: closeStats,
+    error: closeError,
+    loading: closeLoading,
+  } = useCloseTimeStats(owner, name);
 
   return (
     <Card>
@@ -87,8 +93,83 @@ export function RepoDetailPanel({ repo }: Props) {
             <LanguageBreakdown languages={stats.languages} />
           ) : null}
         </div>
+
+        <div>
+          <h3 className="mb-2 text-sm font-semibold">クローズ時間統計</h3>
+          <p className="mb-3 text-xs text-muted-foreground">
+            最近更新された 100 件のクローズ済み Issue / Pull Request を集計しています。
+          </p>
+          {closeLoading ? (
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <Skeleton className="h-24 w-full" />
+              <Skeleton className="h-24 w-full" />
+            </div>
+          ) : closeError ? (
+            <Alert variant="destructive" role="alert">
+              <AlertCircle className="size-4" />
+              <AlertTitle>クローズ時間統計の取得に失敗しました</AlertTitle>
+              <AlertDescription>{closeError.message}</AlertDescription>
+            </Alert>
+          ) : closeStats ? (
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <CloseTimeCard
+                label="Issues"
+                icon={<CircleDot className="size-3.5" aria-hidden="true" />}
+                metric={closeStats.issues}
+              />
+              <CloseTimeCard
+                label="Pull Requests"
+                icon={
+                  <GitPullRequest className="size-3.5" aria-hidden="true" />
+                }
+                metric={closeStats.pullRequests}
+              />
+            </div>
+          ) : null}
+        </div>
       </CardContent>
     </Card>
+  );
+}
+
+function CloseTimeCard({
+  label,
+  icon,
+  metric,
+}: {
+  label: string;
+  icon: React.ReactNode;
+  metric: CloseTimeMetric;
+}) {
+  return (
+    <div className="rounded-md border bg-muted/30 p-3">
+      <div className="flex items-center gap-1 whitespace-nowrap text-xs text-muted-foreground">
+        {icon}
+        {label}
+      </div>
+      {metric.count === 0 ? (
+        <div className="mt-2 text-sm text-muted-foreground">データなし</div>
+      ) : (
+        <dl className="mt-2 space-y-1 text-sm">
+          <div className="flex justify-between gap-2">
+            <dt className="text-muted-foreground">平均</dt>
+            <dd className="font-medium">
+              {formatCloseDuration(metric.averageMs)}
+            </dd>
+          </div>
+          <div className="flex justify-between gap-2">
+            <dt className="text-muted-foreground">中央値</dt>
+            <dd className="font-medium">
+              {formatCloseDuration(metric.medianMs)}
+            </dd>
+          </div>
+          <div className="flex justify-between gap-2 text-xs text-muted-foreground">
+            <dt>件数</dt>
+            <dd>{metric.count}件</dd>
+          </div>
+        </dl>
+      )}
+    </div>
   );
 }
 
@@ -103,7 +184,7 @@ function Stat({
 }) {
   return (
     <div className="rounded-md border bg-muted/30 p-3">
-      <div className="flex items-center gap-1 text-xs text-muted-foreground">
+      <div className="flex items-center gap-1 whitespace-nowrap text-xs text-muted-foreground">
         {icon}
         {label}
       </div>

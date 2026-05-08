@@ -1,5 +1,6 @@
 import {
   computeLanguagePercentages,
+  formatCloseDuration,
   formatCount,
   formatRelativeDate,
 } from "../format";
@@ -66,6 +67,37 @@ describe("formatRelativeDate", () => {
 
   it("returns the original string when the date is invalid", () => {
     expect(formatRelativeDate("not-a-date", now)).toBe("not-a-date");
+  });
+});
+
+describe("formatCloseDuration", () => {
+  const HOUR = 60 * 60 * 1000;
+  const DAY = 24 * HOUR;
+
+  it("returns minutes for under one hour", () => {
+    expect(formatCloseDuration(0)).toBe("0分");
+    expect(formatCloseDuration(45 * 60_000)).toBe("45分");
+  });
+
+  it("returns hours alone when minutes are zero", () => {
+    expect(formatCloseDuration(3 * HOUR)).toBe("3時間");
+  });
+
+  it("returns hours and minutes for under one day", () => {
+    expect(formatCloseDuration(12 * HOUR + 30 * 60_000)).toBe("12時間 30分");
+  });
+
+  it("returns days alone when hours are zero", () => {
+    expect(formatCloseDuration(2 * DAY)).toBe("2日");
+  });
+
+  it("returns days and hours for over one day", () => {
+    expect(formatCloseDuration(3 * DAY + 5 * HOUR)).toBe("3日 5時間");
+  });
+
+  it("returns — for negative or non-finite values", () => {
+    expect(formatCloseDuration(-1)).toBe("—");
+    expect(formatCloseDuration(Number.NaN)).toBe("—");
   });
 });
 

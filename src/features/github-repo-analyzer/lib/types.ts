@@ -47,4 +47,15 @@ export type RepoStats = {
   openPullRequestCount: number;
 };
 
+export type CloseTimeMetric = {
+  count: number;
+  averageMs: number;
+  medianMs: number;
+};
+
+export type CloseTimeStats = {
+  issues: CloseTimeMetric;
+  pullRequests: CloseTimeMetric;
+};
+
 export type SortKey = "updated" | "stars";
