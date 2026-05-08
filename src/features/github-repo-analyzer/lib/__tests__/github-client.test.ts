@@ -1,5 +1,6 @@
 import {
   GithubApiError,
+  fetchCloseTimeStats,
   fetchContributionCalendar,
   fetchRepoStats,
   fetchUserRepos,
@@ -148,6 +149,74 @@ describe("fetchRepoStats", () => {
     );
     expect(error).toBeInstanceOf(GithubApiError);
     expect((error as GithubApiError).errorCode).toBe("NOT_FOUND");
+  });
+});
+
+describe("fetchCloseTimeStats", () => {
+  const originalFetch = global.fetch;
+
+  afterEach(() => {
+    global.fetch = originalFetch;
+  });
+
+  it("returns stats on success", async () => {
+    const payload = {
+      issues: { count: 10, averageMs: 86_400_000, medianMs: 43_200_000 },
+      pullRequests: { count: 5, averageMs: 3_600_000, medianMs: 1_800_000 },
+    };
+    const fetchMock = jest.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve(payload),
+    });
+    global.fetch = fetchMock;
+
+    const result = await fetchCloseTimeStats("facebook", "react");
+    expect(result).toEqual(payload);
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining("mode=close-time-stats")
+    );
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining("owner=facebook")
+    );
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining("repo=react")
+    );
+  });
+
+  it("propagates NOT_FOUND errorCode", async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: false,
+      status: 404,
+      json: () =>
+        Promise.resolve({
+          error: "指定されたリソースが見つかりませんでした。",
+          errorCode: "NOT_FOUND",
+        }),
+    });
+
+    const error = await fetchCloseTimeStats("facebook", "nope").catch(
+      (e: unknown) => e
+    );
+    expect(error).toBeInstanceOf(GithubApiError);
+    expect((error as GithubApiError).errorCode).toBe("NOT_FOUND");
+  });
+
+  it("propagates RATE_LIMITED errorCode", async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: false,
+      status: 429,
+      json: () =>
+        Promise.resolve({
+          error: "GitHub API のレート制限に達しました。",
+          errorCode: "RATE_LIMITED",
+        }),
+    });
+
+    const error = await fetchCloseTimeStats("facebook", "react").catch(
+      (e: unknown) => e
+    );
+    expect(error).toBeInstanceOf(GithubApiError);
+    expect((error as GithubApiError).errorCode).toBe("RATE_LIMITED");
   });
 });
 

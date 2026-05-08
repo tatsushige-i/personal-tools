@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createRateLimit } from "@/lib/rate-limit";
 import { getClientIp, rateLimitResponse } from "@/lib/api-helpers";
 import type {
+  CloseTimeStats,
   ContributionCalendar,
   ContributionLevel,
   LanguageBreakdown,
@@ -9,6 +10,7 @@ import type {
   RepoSummary,
   SortKey,
 } from "@/features/github-repo-analyzer/lib/types";
+import { computeCloseTimeMetric } from "@/features/github-repo-analyzer/lib/close-time-stats";
 
 const GITHUB_API_BASE = "https://api.github.com";
 const USER_AGENT = "personal-tools";
@@ -40,8 +42,11 @@ export async function GET(request: Request) {
   if (mode === "contributions") {
     return handleContributions(searchParams);
   }
+  if (mode === "close-time-stats") {
+    return handleCloseTimeStats(searchParams);
+  }
   return validationError(
-    "mode は repos / repo-stats / contributions のいずれかを指定してください。"
+    "mode は repos / repo-stats / contributions / close-time-stats のいずれかを指定してください。"
   );
 }
 
@@ -131,23 +136,105 @@ async function handleRepoStats(params: URLSearchParams): Promise<Response> {
   return NextResponse.json(stats);
 }
 
+const CLOSE_TIME_PER_PAGE = 100;
+const CLOSE_TIME_REVALIDATE_SECONDS = 3600;
+
+async function handleCloseTimeStats(
+  params: URLSearchParams
+): Promise<Response> {
+  const owner = params.get("owner") ?? "";
+  const repo = params.get("repo") ?? "";
+
+  if (!USERNAME_PATTERN.test(owner)) {
+    return validationError(
+      "owner は1〜39文字の英数字とハイフンで指定してください。"
+    );
+  }
+  if (!REPO_NAME_PATTERN.test(repo)) {
+    return validationError(
+      "repo は1〜100文字の英数字・ドット・アンダースコア・ハイフンで指定してください。"
+    );
+  }
+
+  const url = new URL(`${GITHUB_API_BASE}/repos/${owner}/${repo}/issues`);
+  url.searchParams.set("state", "closed");
+  url.searchParams.set("per_page", String(CLOSE_TIME_PER_PAGE));
+  url.searchParams.set("sort", "updated");
+  url.searchParams.set("direction", "desc");
+
+  const result = await fetchUpstream(
+    url,
+    "クローズ時間統計の取得に失敗しました。",
+    {
+      token: process.env.GITHUB_TOKEN,
+      revalidate: CLOSE_TIME_REVALIDATE_SECONDS,
+    }
+  );
+  if (!result.ok) return result.errorResponse;
+
+  const items = (await result.response.json()) as GithubIssueResponse[];
+  const issueDurations: number[] = [];
+  const prDurations: number[] = [];
+  for (const item of items) {
+    const duration = computeDurationMs(item.created_at, item.closed_at);
+    if (duration === null) continue;
+    if (item.pull_request) {
+      prDurations.push(duration);
+    } else {
+      issueDurations.push(duration);
+    }
+  }
+
+  const stats: CloseTimeStats = {
+    issues: computeCloseTimeMetric(issueDurations),
+    pullRequests: computeCloseTimeMetric(prDurations),
+  };
+  return NextResponse.json(stats);
+}
+
+function computeDurationMs(
+  createdAt: string | null | undefined,
+  closedAt: string | null | undefined
+): number | null {
+  if (!createdAt || !closedAt) return null;
+  const created = Date.parse(createdAt);
+  const closed = Date.parse(closedAt);
+  if (!Number.isFinite(created) || !Number.isFinite(closed)) return null;
+  const duration = closed - created;
+  return duration >= 0 ? duration : null;
+}
+
+type GithubIssueResponse = {
+  created_at: string | null;
+  closed_at: string | null;
+  pull_request?: { url: string } | null;
+};
+
 type UpstreamResult =
   | { ok: true; response: Response }
   | { ok: false; errorResponse: Response };
 
 async function fetchUpstream(
   url: URL,
-  failureMessage: string
+  failureMessage: string,
+  options: { token?: string; revalidate?: number } = {}
 ): Promise<UpstreamResult> {
+  const headers: Record<string, string> = {
+    Accept: "application/vnd.github+json",
+    "X-GitHub-Api-Version": "2022-11-28",
+    "User-Agent": USER_AGENT,
+  };
+  if (options.token) {
+    headers.Authorization = `Bearer ${options.token}`;
+  }
+  const init: RequestInit & { next?: { revalidate: number } } = { headers };
+  if (options.revalidate !== undefined) {
+    init.next = { revalidate: options.revalidate };
+  }
+
   let upstream: Response;
   try {
-    upstream = await fetch(url, {
-      headers: {
-        Accept: "application/vnd.github+json",
-        "X-GitHub-Api-Version": "2022-11-28",
-        "User-Agent": USER_AGENT,
-      },
-    });
+    upstream = await fetch(url, init);
   } catch {
     return {
       ok: false,

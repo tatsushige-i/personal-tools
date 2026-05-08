@@ -35,6 +35,20 @@ export function formatRelativeDate(
   return `${diffYears}年前`;
 }
 
+export function formatCloseDuration(ms: number): string {
+  if (!Number.isFinite(ms) || ms < 0) return "—";
+  const totalMinutes = Math.floor(ms / 60_000);
+  if (totalMinutes < 60) return `${totalMinutes}分`;
+  const totalHours = Math.floor(totalMinutes / 60);
+  if (totalHours < 24) {
+    const minutes = totalMinutes % 60;
+    return minutes === 0 ? `${totalHours}時間` : `${totalHours}時間 ${minutes}分`;
+  }
+  const days = Math.floor(totalHours / 24);
+  const hours = totalHours % 24;
+  return hours === 0 ? `${days}日` : `${days}日 ${hours}時間`;
+}
+
 export function computeLanguagePercentages(
   languages: Record<string, number>
 ): Array<{ language: string; bytes: number; percentage: number }> {

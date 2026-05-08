@@ -1,5 +1,6 @@
 import type {
   ApiErrorCode,
+  CloseTimeStats,
   ContributionCalendar,
   RepoStats,
   RepoSummary,
@@ -51,6 +52,18 @@ export function fetchRepoStats(
     repo,
   });
   return request<RepoStats>(`/api/github?${params.toString()}`);
+}
+
+export function fetchCloseTimeStats(
+  owner: string,
+  repo: string
+): Promise<CloseTimeStats> {
+  const params = new URLSearchParams({
+    mode: "close-time-stats",
+    owner,
+    repo,
+  });
+  return request<CloseTimeStats>(`/api/github?${params.toString()}`);
 }
 
 export function fetchContributionCalendar(
