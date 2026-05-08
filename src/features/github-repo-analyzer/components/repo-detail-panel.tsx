@@ -97,7 +97,7 @@ export function RepoDetailPanel({ repo }: Props) {
         <div>
           <h3 className="mb-2 text-sm font-semibold">クローズ時間統計</h3>
           <p className="mb-3 text-xs text-muted-foreground">
-            直近 100 件のクローズ済み Issue / Pull Request を集計しています。
+            最近更新された 100 件のクローズ済み Issue / Pull Request を集計しています。
           </p>
           {closeLoading ? (
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">

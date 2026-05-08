@@ -166,7 +166,6 @@ async function handleCloseTimeStats(
     url,
     "クローズ時間統計の取得に失敗しました。",
     {
-      token: process.env.GITHUB_TOKEN,
       revalidate: CLOSE_TIME_REVALIDATE_SECONDS,
     }
   );
