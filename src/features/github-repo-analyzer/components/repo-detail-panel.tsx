@@ -143,7 +143,7 @@ function CloseTimeCard({
 }) {
   return (
     <div className="rounded-md border bg-muted/30 p-3">
-      <div className="flex items-center gap-1 text-xs text-muted-foreground">
+      <div className="flex items-center gap-1 whitespace-nowrap text-xs text-muted-foreground">
         {icon}
         {label}
       </div>
@@ -184,7 +184,7 @@ function Stat({
 }) {
   return (
     <div className="rounded-md border bg-muted/30 p-3">
-      <div className="flex items-center gap-1 text-xs text-muted-foreground">
+      <div className="flex items-center gap-1 whitespace-nowrap text-xs text-muted-foreground">
         {icon}
         {label}
       </div>
