@@ -48,7 +48,7 @@ export function GithubFavoritesList({
                       <button
                         type="button"
                         onClick={() => onSelectUser(fav.value)}
-                        className="hover:underline"
+                        className="rounded-sm hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       >
                         @{fav.value}
                       </button>
@@ -56,7 +56,7 @@ export function GithubFavoritesList({
                         type="button"
                         onClick={() => onRemove(fav.id)}
                         aria-label={`お気に入り @${fav.value} を削除`}
-                        className="ml-1 inline-flex items-center justify-center rounded-sm hover:bg-muted-foreground/20"
+                        className="ml-1 inline-flex items-center justify-center rounded-sm hover:bg-muted-foreground/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       >
                         <X className="h-3 w-3" aria-hidden="true" />
                       </button>
@@ -80,7 +80,7 @@ export function GithubFavoritesList({
                       <button
                         type="button"
                         onClick={() => onSelectRepo(fav.value)}
-                        className="hover:underline"
+                        className="rounded-sm hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       >
                         {fav.value}
                       </button>
@@ -88,7 +88,7 @@ export function GithubFavoritesList({
                         type="button"
                         onClick={() => onRemove(fav.id)}
                         aria-label={`お気に入り ${fav.value} を削除`}
-                        className="ml-1 inline-flex items-center justify-center rounded-sm hover:bg-muted-foreground/20"
+                        className="ml-1 inline-flex items-center justify-center rounded-sm hover:bg-muted-foreground/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       >
                         <X className="h-3 w-3" aria-hidden="true" />
                       </button>
