@@ -59,3 +59,11 @@ export type CloseTimeStats = {
 };
 
 export type SortKey = "updated" | "stars";
+
+export type FavoriteType = "user" | "repo";
+
+export type GithubFavorite = {
+  id: string;
+  type: FavoriteType;
+  value: string;
+};

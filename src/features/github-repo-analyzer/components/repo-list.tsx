@@ -11,6 +11,8 @@ type Props = {
   onSelect: (repo: RepoSummary) => void;
   sort: SortKey;
   onSortChange: (sort: SortKey) => void;
+  getIsFavorite: (repo: RepoSummary) => boolean;
+  onToggleFavorite: (repo: RepoSummary) => void;
 };
 
 export function RepoList({
@@ -20,6 +22,8 @@ export function RepoList({
   onSelect,
   sort,
   onSortChange,
+  getIsFavorite,
+  onToggleFavorite,
 }: Props) {
   const sortedRepos = repos
     ? [...repos].sort((a, b) => {
@@ -75,6 +79,8 @@ export function RepoList({
               repo={repo}
               selected={repo.id === selectedRepoId}
               onSelect={onSelect}
+              isFavorite={getIsFavorite(repo)}
+              onToggleFavorite={onToggleFavorite}
             />
           ))}
         </div>
